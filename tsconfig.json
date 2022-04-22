@@ -1,0 +1,33 @@
+{
+  "include": [
+    "./src/*",
+    "src/utils/use-stores.tsx",
+    "src/translations/giftCardConfig.ts",
+    "src/translations/i18n.ts"
+  ],
+  "exclude": [
+    "./node_modules/*"
+  ],
+  "compilerOptions": {
+    "lib": [
+      "dom",
+      "es2017"
+    ],
+    "target": "esnext",
+    "jsx": "react-jsx",
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "allowJs": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "experimentalDecorators": true,
+    "noImplicitAny": false,
+    "noFallthroughCasesInSwitch": true
+  }
+}
