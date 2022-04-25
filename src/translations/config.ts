@@ -1,12 +1,9 @@
 import { isLocale } from './types';
-import { localStore } from '../utils';
+import localStore from '../utils/localStore';
 import config from '../utils/config';
 
-
 export const defaultLocale = 'en';
-
 export const locales = ['en', 'ja'];
-
 export const languageNames = {
   en: 'en',
   ja: 'ja'

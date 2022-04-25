@@ -8,51 +8,47 @@ import {
   CartContainerSummary,
   CartContainerSummaryLineItem
 } from '../styles';
+import { centsToDollars } from '../../../../utils/centsToDollars';
+import config from '../../../../utils/config';
 
 interface IStepThreeProps {
   step: number;
-  selectedBlockchain: string;
+  blockchain: string;
   paymentMethod: string;
   checkoutLoading: boolean;
   cartPriceTotal: number;
   transactionAddress: string;
-  config: any;
   checkoutDisabled: boolean;
-  convertCentsToDollarsPrice: (val: number) => string;
   handleCheckout: (e: any) => void;
 }
 
 const StepThree = (props: IStepThreeProps) => {
   const {
     step,
-    selectedBlockchain,
+    blockchain,
     paymentMethod,
     checkoutLoading,
     cartPriceTotal,
     transactionAddress,
-    config,
     checkoutDisabled,
-    convertCentsToDollarsPrice,
     handleCheckout
   } = props;
-
-  console.log('cartPriceTotal: ', cartPriceTotal);
 
   return step === 3 ? (
     <CartContainerDetailStep>
       <h2>Summary</h2>
       <CartContainerDetailStepInner className={step === 3 ? 'active' : ''}>
         <CartContainerDetailStepText>
-          {paymentMethod === 'deposit' ? (
-            <>
+          {paymentMethod === 'deposit' && (
+            <CartContainerSummary>
               <label>
-                Send the funds to the address below. As soon as the deposit is
-                received, the purchase will be confirmed automatically.
+                Send funds to the address below. As soon as the deposit is
+                received, the purchase will be confirmed.
               </label>
               <br />
-              {selectedBlockchain === 'terra' ? (
+              {blockchain === 'terra' ? (
                 <DepositCheckoutContainer>
-                  <p>Send ${convertCentsToDollarsPrice(cartPriceTotal)} UST</p>
+                  <p>Send ${centsToDollars(cartPriceTotal)} UST</p>
                   <br />
                   <p>⚠️ Note: Please include both a wallet address and memo address.</p>
                   <p>Address: {config.lcdClient.ustAddress}</p>
@@ -60,13 +56,15 @@ const StepThree = (props: IStepThreeProps) => {
                 </DepositCheckoutContainer>
               ) : (
                 <DepositCheckoutContainer>
-                  <p>Send ${convertCentsToDollarsPrice(cartPriceTotal)} USDC</p>
+                  <p>Send ${centsToDollars(cartPriceTotal)} USDC</p>
                   <br />
                   <p>{transactionAddress}</p>
                 </DepositCheckoutContainer>
               )}
-            </>
-          ) : (
+            </CartContainerSummary>
+          )}
+
+          {paymentMethod === 'wallet' && (
             <CartContainerSummary>
               <label>
                 Click below to prompt your selected wallet to pay for this order.
@@ -94,7 +92,7 @@ const StepThree = (props: IStepThreeProps) => {
               <CartContainerDetailStepButtonContainer>
                 {checkoutLoading ? (
                   <BlueButton
-                    className="full disabled"
+                    className='full disabled'
                     onClick={(e) => e.preventDefault()}
                   >
                     Loading..
@@ -104,8 +102,8 @@ const StepThree = (props: IStepThreeProps) => {
                     className={`full ${checkoutDisabled && 'disabled'}`}
                     onClick={(e) => handleCheckout(e)}
                   >
-                    Checkout (${convertCentsToDollarsPrice(cartPriceTotal)}
-                    &nbsp;${selectedBlockchain === 'terra' ? `UST` : `USDC`})
+                    Checkout (${centsToDollars(cartPriceTotal)}
+                    &nbsp;${blockchain === 'terra' ? `UST` : `USDC`})
                   </BlueButton>
                 )}
               </CartContainerDetailStepButtonContainer>

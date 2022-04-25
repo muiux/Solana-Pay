@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { localStore } from '../utils';
+import localStore from '../utils/localStore';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { isLocale } from '../translations/types';
 import { getInitLocale, defaultLocale } from '../translations/config';

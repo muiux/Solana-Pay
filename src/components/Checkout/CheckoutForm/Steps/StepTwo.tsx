@@ -19,31 +19,30 @@ import {
 } from '../styles';
 import ConnectButton from '../../../ConnectButton';
 import { formatWalletAddress } from '../../../../utils/formatWalletAddress';
+import { PaymentOptions } from '../types';
 
 interface IStepTwoProps {
   step: number;
   completedSteps: number[];
-  selectedBlockchain: string;
-  handleSetSelectedBlockchain: (b: string) => void;
+  blockchain: string;
+  handleSetBlockchain: (blockchain: string) => void;
   paymentMethod: string;
   selectedWallet: string;
-  walletAddress?: string;
-  userUstBalance?: number;
-  phantomUSDCBalance: number;
-  phantomWalletAddress: string;
-  solflareUSDCBalance: number;
-  solflareWalletAddress: string;
-  userTerraWalletAddress: string;
+  terraWalletAddress: string;
+  setTerraWalletAddress: (address: string) => void;
   terraWalletLoading: boolean;
-  errors: any;
+  ustBalance?: number;
+
+  solanaWalletAddress?: string;
+  solanaUsdcBalance: number;
+  solanaWalletLoading: boolean;
+  
   checkWallet: () => boolean;
   checkTerraBalance: () => boolean;
   checkSolanaBalance: () => boolean;
   handleSetSelectedWallet: (w: string) => void;
-  setPaymentMethod: (v: string) => void;
-  setUserTerraWalletAddress: (v: string) => void;
+  setPaymentMethod: (v: PaymentOptions) => void;
   handleEditStep: (e: any, step: number) => void;
-  getClassNameForField: (f: string) => string;
   completeStep: (e: any, step: number) => void;
   disconnectWallet: () => void;
 }
@@ -52,21 +51,23 @@ const StepTwo = (props: IStepTwoProps) => {
   const {
     step,
     completedSteps,
-    selectedBlockchain,
-    handleSetSelectedBlockchain,
+    blockchain,
+    handleSetBlockchain,
     selectedWallet,
-    walletAddress,
-    userUstBalance,
-    phantomUSDCBalance,
-    phantomWalletAddress,
-    solflareUSDCBalance,
-    solflareWalletAddress,
+    terraWalletAddress,
+    setTerraWalletAddress,
+    ustBalance,
     terraWalletLoading,
+
+    solanaUsdcBalance,
+    solanaWalletAddress,
+    solanaWalletLoading,
+    
     checkWallet,
     checkTerraBalance,
     checkSolanaBalance,
     handleSetSelectedWallet,
-    setUserTerraWalletAddress,
+    
     handleEditStep,
     completeStep,
     disconnectWallet
@@ -80,12 +81,12 @@ const StepTwo = (props: IStepTwoProps) => {
       {step !== 2 && (
         <CartContainerDetailStepInner className='active'>
           <CartContainerDetailStepText className='price blockchain'>
-            {selectedBlockchain === 'terra'
+            {blockchain === 'terra'
               ? <BlockchainLogoContainer>
                   <Icon name='TerraLogo' />
                   <span>Terra</span>
                 </BlockchainLogoContainer>
-              : selectedBlockchain === 'solana'
+              : blockchain === 'solana'
                 ? <BlockchainLogoContainer>
                     <Icon name='SolanaLogo' />
                     <span>Solana</span>
@@ -107,14 +108,14 @@ const StepTwo = (props: IStepTwoProps) => {
         <CartContainerDetailStepInner className={step === 2 ? 'active' : ''}>
           <CartContainerDetailStepText>
             {/* Terra/UST */}
-            <BlockchainOptionsContainer className={selectedBlockchain === 'terra' ? 'active' : ''}>
+            <BlockchainOptionsContainer className={blockchain === 'terra' ? 'active' : ''}>
               <BlockchainContainer>
                 <BlockchainRadioContainer>
                   <input
                     type='radio'
                     name='blockchain'
-                    checked={selectedBlockchain === 'terra'}
-                    onChange={(e) => handleSetSelectedBlockchain('terra')}
+                    checked={blockchain === 'terra'}
+                    onChange={(e) => handleSetBlockchain('terra')}
                   />
                 </BlockchainRadioContainer>
                 <BlockchainLogoContainer>
@@ -122,39 +123,41 @@ const StepTwo = (props: IStepTwoProps) => {
                   <span>Terra</span>
                 </BlockchainLogoContainer>
               </BlockchainContainer>
-              {selectedBlockchain === 'terra' && (
+              {blockchain === 'terra' && (
                 <BlockchainDetailContainer>
                   <span>Pay with</span>
                   <Icon name='TerraUsdLogo' size='lg' />
                 </BlockchainDetailContainer>
               )}
-              {selectedBlockchain === 'terra' && (
+              {blockchain === 'terra' && (
                 <WalletOptionsContainer>                  
                   {!checkWallet()
                     ? (
                         <div>
-                          <h4>Connect your Terra wallet</h4>
+                          <h4>Connect your Terra Wallet</h4>
                           <div style={{ height: 16, display: 'block' }} />
                           <ConnectButton
                             onWalletDisconnect={() => disconnectWallet()}
                             handleSetSelectedWallet={handleSetSelectedWallet}
+                            setTerraWalletAddress={setTerraWalletAddress}
                             walletList={['TERRA', 'WALLETCONNECT']}
                           />
                         </div>
                       )
-                    : !checkTerraBalance()
-                      ? <p>Uh oh. It looks like your balance of ${(userUstBalance && userUstBalance > 0) ? userUstBalance?.toFixed(2) : 0} UST is too low to continue. Please add funds and try reloading this page.<br/><br/> <button onClick={disconnectWallet}>Disconnect</button></p>
-                      : <WalletSelectedContainer>
+                    : !terraWalletLoading
+                      ? !checkTerraBalance()
+                        ? <p>Uh oh. It looks like your balance of ${(ustBalance && ustBalance > 0) ? ustBalance?.toFixed(2) : 0} UST is too low to continue. Please add funds and try reloading this page.<br/><br/> <button onClick={disconnectWallet}>Disconnect</button></p>
+                        : <WalletSelectedContainer>
                           <WalletSelectedContainerIcon>
-                            <img src='https://assets.terra.money/icon/station-extension/icon.png' />
+                            <img src='https://assets.terra.money/icon/station-extension/icon.png' alt='Terra Station' />
                           </WalletSelectedContainerIcon>
                           <WalletSelectedContainerDetail>
-                          {walletAddress && walletAddress !== ''
-                            ? <h2>{formatWalletAddress(walletAddress)}</h2>
+                          {terraWalletAddress && terraWalletAddress !== ''
+                            ? <h2>{formatWalletAddress(terraWalletAddress)}</h2>
                             : null
                           }
-                          {userUstBalance && userUstBalance !== 0
-                            ? <h3>Balance <span>${userUstBalance?.toFixed(2)} UST</span></h3>
+                          {ustBalance && ustBalance !== 0
+                            ? <h3>Balance <span>${ustBalance?.toFixed(2)} UST</span></h3>
                             : null
                           }
                           </WalletSelectedContainerDetail>
@@ -164,20 +167,21 @@ const StepTwo = (props: IStepTwoProps) => {
                             </button>
                           </WalletSelectedContainerButtons>
                         </WalletSelectedContainer>
+                      : <p>Loading..</p>
                     }
                 </WalletOptionsContainer>
               )}
             </BlockchainOptionsContainer>
 
             {/* Solana/USDC */}
-            <BlockchainOptionsContainer className={selectedBlockchain === 'solana' ? 'active' : ''}>
+            <BlockchainOptionsContainer className={blockchain === 'solana' ? 'active' : ''}>
               <BlockchainContainer>
                 <BlockchainRadioContainer>
                   <input
                     type='radio'
                     name='blockchain'
-                    checked={selectedBlockchain === 'solana'}
-                    onChange={(e) => handleSetSelectedBlockchain('solana')}
+                    checked={blockchain === 'solana'}
+                    onChange={(e) => handleSetBlockchain('solana')}
                   />
                 </BlockchainRadioContainer>
                 <BlockchainLogoContainer>
@@ -185,50 +189,35 @@ const StepTwo = (props: IStepTwoProps) => {
                   <span>Solana</span>
                 </BlockchainLogoContainer>
               </BlockchainContainer>
-              {selectedBlockchain === 'solana' &&
+              {blockchain === 'solana' &&
                 <BlockchainDetailContainer>
                   <span>Pay with</span>
                   <Icon name='USDCIcon' />
                 </BlockchainDetailContainer>
               }
-              {selectedBlockchain === 'solana' &&
+              {blockchain === 'solana' &&
                 <WalletOptionsContainer>
-                  {selectedWallet === 'phantom' ? (
-                    <>
-                      {phantomUSDCBalance && phantomUSDCBalance !== 0
-                        ? <p>${phantomUSDCBalance} USDC</p>
-                        : 'N/A'
-                      }
-                      {phantomWalletAddress && phantomWalletAddress !== ''
-                        ? <p>{phantomWalletAddress}</p>
-                        : null
-                      }
-                      {!isPhantomInstalled
-                        ? <label>Please install Phantom wallet.</label>
-                        : null
-                      }
-                    </>
-                  ) : selectedWallet === 'solflare' ? (
-                    <>
-                      {solflareUSDCBalance && solflareUSDCBalance !== 0
-                        ? <p>${solflareUSDCBalance} USDC</p>
-                        : 'N/A'
-                      }
-                      {solflareWalletAddress && solflareWalletAddress !== ''
-                        ? <p>{solflareWalletAddress}</p>
-                        : null
-                      }
-                      {!isSolflareInstalled
-                        ? <label>Please install Solflare wallet.</label>
-                        : null
-                      }
-                    </>
-                  ) : null}
+                  {solanaUsdcBalance && solanaUsdcBalance !== 0
+                    ? <p>${solanaUsdcBalance} USDC</p>
+                    : 'N/A'
+                  }
+                  {solanaWalletAddress && solanaWalletAddress !== ''
+                    ? <p>{solanaWalletAddress}</p>
+                    : null
+                  }
+                  {selectedWallet === 'phantom' && !isPhantomInstalled
+                    ? <label>Please install Phantom wallet.</label>
+                    : null
+                  }
+                  {selectedWallet === 'solflare' && !isSolflareInstalled
+                    ? <label>Please install Solflare wallet.</label>
+                    : null
+                  }
                   <div>
                     {!checkWallet()
                       ? (
                           <div>
-                            <h4>Connect your Solana wallet</h4>
+                            <h4>Connect your Solana Wallet</h4>
                             <div style={{ height: 16, display: 'block' }} />
                             <ConnectButton
                               onWalletDisconnect={() => disconnectWallet()}
@@ -250,7 +239,6 @@ const StepTwo = (props: IStepTwoProps) => {
             <BlueButton
               disabled={!checkWallet()}
               onClick={(e) => completeStep(e, 2)}
-            
             >
               Continue
             </BlueButton>

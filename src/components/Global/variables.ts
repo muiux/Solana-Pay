@@ -29,11 +29,6 @@ export const breakpointDown = Object.keys(breakpoints).reduce(
   {}
 );
 
-export const SimpleContainer = styled.div`
-  width: 100%;
-  position: relative;
-`;
-
 export const ContainerWrapper = styled.div`
   max-width: 1200px;
   margin: 0 auto;
@@ -128,84 +123,3 @@ export const GrayButton = styled.button`
     transform: translateY(-3px);
   }
 `;
-
-export const BlackButton = styled.button`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border: none;
-  background: ${primaryBlack};
-  border-radius: 8px;
-  font-size: 16px;
-  font-family: ${fontFamily};
-  font-weight: 500;
-  color: ${primaryWhite};
-  padding: 8px 16px;
-  width: 200px;
-  height: 54px;
-  text-decoration: none;
-  box-sizing: border-box;
-  cursor: pointer;
-  transform: translateY(0);
-  transition: all 0.2s ease-in-out;
-  
-  &:hover {
-    transform: translateY(-3px);
-  }
-
-  &:disabled {
-    transform: translateY(0);
-  }
-`;
-
-export const customSelectDropdownStyles = {
-  placeholder: (provided, state) => ({
-    ...provided,
-    fontFamily: 'sofia-pro',
-    color: '#000'
-  }),
-  option: (provided, state) => ({
-    ...provided,
-    fontFamily: 'sofia-pro',
-    background: '#FFF',
-    color: '#000',
-    cursor: 'pointer',
-    borderBottom: '1px solid #D8D8D8'
-  }),
-  control: (provided, state) => ({
-    width: 200,
-    display: 'flex',
-    fontFamily: 'sofia-pro',
-    cursor: 'pointer',
-    border: '1px solid #D8D8D8',
-    borderRadius: 4,
-    maxHeight: 60
-  }),
-  singleValue: (provided, state) => ({
-    ...provided,
-    width: 200,
-    fontFamily: 'sofia-pro',
-    color: '#000',
-    cursor: 'pointer',
-    overflow: 'visible',
-    fontSize: 24,
-    maxHeight: 60,
-    height: '100%',
-    display: 'flex',
-    alignItems: 'center',
-    paddingBottom: 2,
-    transform: 'none',
-    top: 0,
-  }),
-  menu: (provided, state) => ({
-    ...provided,
-    width: 200,
-    fontFamily: 'sofia-pro',
-    background: '#FFF'
-  }),
-  indicatorSeparator: (provided, state) => ({
-    ...provided,
-    display: 'none',
-    fontFamily: 'sofia-pro',
-  }),
-}
