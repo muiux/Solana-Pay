@@ -4,7 +4,7 @@ import {
   CartContainerDetailStepInner,
   CartContainerDetailStepText,
 } from '../styles';
-import { convertCentsToDollarsPrice } from '../../../../utils/centsToDollars';
+import { centsToDollars } from '../../../../utils/centsToDollars';
 
 interface IStepTwoProps {
   step?: number;
@@ -19,7 +19,7 @@ const StepOne = ({ cartPriceTotal }: IStepTwoProps) => {
       <h2>Payment Overview</h2>
       <CartContainerDetailStepInner className='active'>
         <CartContainerDetailStepText className='price'>
-          <p className='price'>${convertCentsToDollarsPrice(cartPriceTotal)}</p>
+          <p className='price'>${centsToDollars(cartPriceTotal)}</p>
           <Icon name='CheckmarkIcon' />
         </CartContainerDetailStepText>
       </CartContainerDetailStepInner>

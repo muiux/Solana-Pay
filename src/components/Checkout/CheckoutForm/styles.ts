@@ -465,10 +465,6 @@ export const BlockchainOptionsContainer = styled.div`
     height: 36px;
   }
 
-  p {
-    padding-left: 8px;
-  }
-
   &.active {
     border: 1px solid #3066db;
 
@@ -565,7 +561,7 @@ export const WalletOptionsContainer = styled.div`
   }
 
   p {
-    padding-left: 8px;
+    font-size: 12px;
   }
 
   h4 {

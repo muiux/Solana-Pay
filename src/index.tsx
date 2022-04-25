@@ -1,6 +1,6 @@
 import React, { lazy, useContext, Suspense } from 'react';
 import { render } from 'react-dom';
-import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import * as Sentry from "@sentry/react";
 import { Integrations } from "@sentry/tracing";
 import { CaptureConsole } from '@sentry/integrations';
@@ -21,13 +21,12 @@ const LoadingScreen = ({ locale }) => (
       <Loader />
     </Layout>
   </LocaleProvider>
-)
-
+);
 
 function App() {
   const { locale } = useContext(LocaleContext);
   
-  const AppContents = () => (
+  const Main = () => (
     <Router>
       <Suspense fallback={<LoadingScreen locale={locale} />}>
         <Switch>
@@ -38,10 +37,9 @@ function App() {
       </Suspense>
     </Router>
   );
-  
 
   return (
-    <AppContents />
+    <Main />
   );
 }
 
