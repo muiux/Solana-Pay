@@ -1,5 +1,5 @@
-import { useEffect } from "react";
-import { useWallet } from "./hooks";
+import { useEffect } from 'react';
+import { useWallet } from './hooks';
 
 const Updater = () => {
   const { address, getTerraBalancesByAddress } = useWallet();

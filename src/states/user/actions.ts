@@ -1,16 +1,16 @@
-import { createAction } from "@reduxjs/toolkit";
-import { IAuth, IUser } from "./types";
+import { createAction } from '@reduxjs/toolkit';
+import { IAuth, IUser } from './types';
 
 export const updateUserAction = createAction<IUser | undefined>(
-  "user/updateUser"
+  'user/updateUser'
 );
 
 export const updateAuthAction = createAction<IAuth | undefined>(
-  "user/updateAuth"
+  'user/updateAuth'
 );
 
 export const updateTerraStationConnectedAction = createAction<boolean>(
-  "user/updateTerraStationConnected"
+  'user/updateTerraStationConnected'
 );
 
-export const updateLocaleAction = createAction<string>("user/updateLocale");
+export const updateLocaleAction = createAction<string>('user/updateLocale');

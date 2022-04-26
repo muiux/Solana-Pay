@@ -1,5 +1,5 @@
 import config from './config';
-import { UserStore } from "../stores/UserStore";
+import { UserStore } from '../stores/UserStore';
 
 const kadoApiRequest = async (
   endpoint: string,

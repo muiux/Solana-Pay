@@ -1,20 +1,20 @@
-import { ActionReducerMapBuilder, createReducer } from "@reduxjs/toolkit";
-import { LCDClient } from "@terra-money/terra.js";
+import { ActionReducerMapBuilder, createReducer } from '@reduxjs/toolkit';
+import { LCDClient } from '@terra-money/terra.js';
 
-import config from "../../utils/config";
+import config from '../../utils/config';
 
 import {
   updateUserAction,
   updateLocaleAction,
   updateAuthAction,
   updateTerraStationConnectedAction,
-} from "./actions";
-import { UserState } from "./types";
+} from './actions';
+import { UserState } from './types';
 
 const initialState: UserState = {
   user: undefined,
   auth: undefined,
-  locale: "",
+  locale: '',
   terra: new LCDClient({
     URL: config.lcdClient.url,
     chainID: config.lcdClient.chainId,

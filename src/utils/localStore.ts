@@ -1,5 +1,5 @@
-import { aesDecryptData, aesEncryptData } from "./aesEncrypt";
-import config from "./config";
+import { aesDecryptData, aesEncryptData } from './aesEncrypt';
+import config from './config';
 
 const set = (key: string, value: any): void => {
   if (typeof value === 'object') {

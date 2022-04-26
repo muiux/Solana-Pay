@@ -1,5 +1,5 @@
 import React, { createRef, RefObject, useContext } from 'react'
-import { localStore } from '../../utils';
+import localStore from '../../utils/localStore';
 import config from '../../utils/config';
 import { locales, languageNames } from '../../translations/config';
 import { LocaleContext } from '../../context/LocaleContext';
@@ -28,7 +28,7 @@ class SelectLocaleDropdown extends React.Component<ISelectedLocaleProps, ISelect
   wrapperRef: RefObject<HTMLDivElement> | any;
   
   state = {
-		selectedOption: "",
+		selectedOption: '',
     showDropdown: false
   }
 

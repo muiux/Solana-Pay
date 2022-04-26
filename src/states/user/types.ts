@@ -1,4 +1,4 @@
-import { LCDClient } from "@terra-money/terra.js";
+import { LCDClient } from '@terra-money/terra.js';
 
 export interface ILoginProps {
   email: string;

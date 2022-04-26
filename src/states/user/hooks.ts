@@ -1,18 +1,18 @@
-import { useDispatch, useSelector } from "react-redux";
-import jwt_decode from "jwt-decode";
-import * as Sentry from "@sentry/react";
+import { useDispatch, useSelector } from 'react-redux';
+import jwt_decode from 'jwt-decode';
+import * as Sentry from '@sentry/react';
 
-import { AppState } from "..";
-import { aesDecryptData, aesEncryptData } from "../../utils/aesEncrypt";
-import config from "../../utils/config";
-import localStore from "../../utils/localStore";
+import { AppState } from '..';
+import { aesDecryptData, aesEncryptData } from '../../utils/aesEncrypt';
+import config from '../../utils/config';
+import localStore from '../../utils/localStore';
 import {
   updateAuthAction,
   updateLocaleAction,
   updateTerraStationConnectedAction,
   updateUserAction,
-} from "./actions";
-import { UserState } from "./types";
+} from './actions';
+import { UserState } from './types';
 
 export function useAuth() {
   const dispatch = useDispatch();
@@ -81,7 +81,7 @@ export function useAuth() {
         config.kadoClient.aes
       );
     }
-    return "";
+    return '';
   }
 
   function setIsLoggedIn(isLoggedIn: boolean) {
@@ -116,9 +116,9 @@ export function useLocale() {
   function getLocale() {
     if (localStore.isAvailable()) {
       const locale = localStore.get(config.localStoreKey.locale);
-      return locale && locale !== null ? locale : "en"; // Fallback to 'en'
+      return locale && locale !== null ? locale : 'en'; // Fallback to 'en'
     }
-    return "en";
+    return 'en';
   }
 
   function setLocale(locale: string) {
@@ -143,7 +143,7 @@ export function useWallet() {
   async function getTerraBalancesByAddress(address: string) {
     const [balance]: any = await terra.bank.balance(address);
 
-    const ustToken = balance.toData().find((x) => x.denom === "uusd");
+    const ustToken = balance.toData().find((x) => x.denom === 'uusd');
     if (ustToken) {
       const { amount } = ustToken;
       dispatch(updateUserAction({ address, balances: { ust: amount } }));

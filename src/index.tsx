@@ -1,21 +1,21 @@
-import { lazy, useContext, Suspense } from "react";
-import { render } from "react-dom";
-import { Provider } from "react-redux";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import { LocaleContext, LocaleProvider } from "./context/LocaleContext";
-import { WalletProvider, getChainOptions } from "@terra-money/wallet-provider";
-import Layout from "./pages/Layout";
-import Loader from "./components/Loader";
-import store from "./states";
+import { lazy, useContext, Suspense } from 'react';
+import { render } from 'react-dom';
+import { Provider } from 'react-redux';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import { LocaleContext, LocaleProvider } from './context/LocaleContext';
+import { WalletProvider, getChainOptions } from '@terra-money/wallet-provider';
+import Layout from './pages/Layout';
+import Loader from './components/Loader';
+import store from './states';
 
-import UserService from "./states/user/updater";
+import UserService from './states/user/updater';
 
-// import * as Sentry from "@sentry/react";
-// import { Integrations } from "@sentry/tracing";
-// import { CaptureConsole } from "@sentry/integrations";
+// import * as Sentry from '@sentry/react';
+// import { Integrations } from '@sentry/tracing';
+// import { CaptureConsole } from '@sentry/integrations';
 
 // Lazy Loaded Pages
-const CheckoutPage = lazy(() => import("./pages/Checkout"));
+const CheckoutPage = lazy(() => import('./pages/Checkout'));
 
 const LoadingScreen = ({ locale }) => (
   <LocaleProvider lang={locale}>
@@ -39,7 +39,7 @@ function App() {
       <Router>
         <Suspense fallback={<LoadingScreen locale={locale} />}>
           <Switch>
-            <Route path="/">
+            <Route path='/'>
               <CheckoutPage />
             </Route>
           </Switch>
@@ -66,7 +66,7 @@ function App() {
 //   tracesSampleRate: 1.0,
 // });
 
-const rootElement = document.getElementById("root");
+const rootElement = document.getElementById('root');
 getChainOptions().then((chainOptions) => {
   render(<WalletProvider {...chainOptions} children={<App />} />, rootElement);
 });

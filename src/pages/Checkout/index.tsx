@@ -1,12 +1,12 @@
-import { useState } from "react";
-import Fade from "react-reveal/Fade";
-import { observer } from "mobx-react";
-import Layout from "../Layout";
-import Loader from "../../components/Loader";
-import Icon from "../../components/Icon";
-import { ContainerWrapper } from "../../components/Global/variables";
-import { createOrder } from "../../utils/apiServices";
-import CheckoutForm from "../../components/Checkout/CheckoutForm";
+import { useState } from 'react';
+import Fade from 'react-reveal/Fade';
+import { observer } from 'mobx-react';
+import Layout from '../Layout';
+import Loader from '../../components/Loader';
+import Icon from '../../components/Icon';
+import { ContainerWrapper } from '../../components/Global/variables';
+import { createOrder } from '../../utils/apiServices';
+import CheckoutForm from '../../components/Checkout/CheckoutForm';
 
 import {
   CartLoader,
@@ -14,37 +14,38 @@ import {
   CartContainer,
   CartContainerBanner,
   CheckoutDisabledBanner,
-  DisabledBannerItem,
-} from "./styles";
+  DisabledBannerItem
+} from './styles';
 
 const CheckoutPage = observer(() => {
-  const [loading, setLoading] = useState<boolean>(false);
-  const [, setOrderId] = useState<string>("");
-  const [cartPriceTotal] = useState<number>(2199);
-  const [taxTotal, setTaxTotal] = useState<number>(0);
-  const [, setTaxRate] = useState<number>(0);
-  const [checkoutDisabled] = useState<boolean>(false);
-  const [exchangeRate] = useState<number>(0);
-  const disabledBannerVisible = false;
+  const [loading, setLoading]                   = useState<boolean>(false);
+  const [orderId, setOrderId]                   = useState<string>('');
+  const [cartPriceTotal]                        = useState<number>(2199);
+  const [taxTotal, setTaxTotal]                 = useState<number>(0);
+  const [taxRate, setTaxRate]                   = useState<number>(0);
+  const [checkoutDisabled, setCheckoutDisabled] = useState<boolean>(false);
+  const [exchangeRate, setExchangeRate]         = useState<number>(0);
+  const disabledBannerVisible                   = false;
 
   return (
     <Layout>
       <CartContainerWrapper>
         <ContainerWrapper>
-          {disabledBannerVisible && (
+  
+          {disabledBannerVisible &&
             <Fade delay={1000}>
               <CartContainerBanner>
                 <CheckoutDisabledBanner>
                   <DisabledBannerItem>
-                    <Icon name="AccessDeniedIcon" />
+                    <Icon name='AccessDeniedIcon'/>
                     This is an unknown error. Please try again soon.
                   </DisabledBannerItem>
                 </CheckoutDisabledBanner>
               </CartContainerBanner>
             </Fade>
-          )}
-
-          {loading && (
+          }
+          
+          {loading &&
             <Fade delay={150}>
               <CartContainer>
                 <CartLoader>
@@ -53,9 +54,9 @@ const CheckoutPage = observer(() => {
                 </CartLoader>
               </CartContainer>
             </Fade>
-          )}
+          }
 
-          {!loading && (
+          {!loading &&
             <CartContainer>
               <CheckoutForm
                 taxTotal={taxTotal}
@@ -69,11 +70,11 @@ const CheckoutPage = observer(() => {
                 exchangeRate={exchangeRate}
               />
             </CartContainer>
-          )}
+          }
         </ContainerWrapper>
       </CartContainerWrapper>
     </Layout>
-  );
+  )
 });
 
 export default CheckoutPage;
