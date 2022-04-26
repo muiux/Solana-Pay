@@ -1,36 +1,35 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
+import { MsgSend, LCDClient } from "@terra-money/terra.js";
+import Icon from "../../Icon";
+import { centsToDollars } from "../../../utils/centsToDollars";
 import {
-  MsgSend,
-  LCDClient
-} from '@terra-money/terra.js';
-import Icon from '../../Icon';
-import { centsToDollars } from '../../../utils/centsToDollars';
-import { CartContainerDetail, CheckoutHeader, CheckoutHeaderButtons, CheckoutHeaderContent } from './styles';
+  CartContainerDetail,
+  CheckoutHeader,
+  CheckoutHeaderButtons,
+  CheckoutHeaderContent,
+} from "./styles";
 import {
   ICreateOrderRequest,
   ICreateOrderResponse,
   createTransaction,
   getTerraTransactions,
   getSolanaTransactions,
-} from '../../../utils/apiServices';
-import config from '../../../utils/config';
-import {
-  useWallet,
-  ConnectType
-} from '@terra-money/wallet-provider';
-import * as web3 from '@solana/web3.js';
-import { Token, TOKEN_PROGRAM_ID } from '@solana/spl-token';
-import { useStores } from '../../../hooks/useStores';
-import StepOne from './Steps/StepOne';
-import StepTwo from './Steps/StepTwo';
-import StepThree from './Steps/StepThree';
-import { Cluster, PaymentOptions } from './types';
+} from "../../../utils/apiServices";
+import config from "../../../utils/config";
+import { useWallet, ConnectType } from "@terra-money/wallet-provider";
+import * as web3 from "@solana/web3.js";
+import { Token, TOKEN_PROGRAM_ID } from "@solana/spl-token";
+import { useStores } from "../../../hooks/useStores";
+import StepOne from "./Steps/StepOne";
+import StepTwo from "./Steps/StepTwo";
+import StepThree from "./Steps/StepThree";
+import { Cluster, PaymentOptions } from "./types";
 
 declare global {
   interface Window {
     solana?: {
       isPhantom?: boolean;
-    }
+    };
   }
 }
 
@@ -43,7 +42,7 @@ interface IProps {
   setTaxTotal: React.Dispatch<React.SetStateAction<number>>;
   setTaxRate: React.Dispatch<React.SetStateAction<number>>;
   setOrderId: React.Dispatch<React.SetStateAction<string>>;
-  createOrder: (order: ICreateOrderRequest) =>  Promise<ICreateOrderResponse>;
+  createOrder: (order: ICreateOrderRequest) => Promise<ICreateOrderResponse>;
   exchangeRate: number;
 }
 
@@ -58,37 +57,39 @@ const CheckoutForm = ({
 }: IProps) => {
   // Global
   const [checkoutLoading, setCheckoutLoading] = useState<boolean>(false);
-  const [error, setError]                     = useState<boolean>(false);
-  const [errorMessage, setErrorMessage]       = useState<string>('');
-  const [step, setStep]                       = useState<number>(2);
-  const [completedSteps, setCompletedSteps]   = useState<number[]>([]);
+  const [, setError] = useState<boolean>(false);
+  const [, setErrorMessage] = useState<string>("");
+  const [step, setStep] = useState<number>(2);
+  const [completedSteps, setCompletedSteps] = useState<number[]>([]);
 
   // Select blockchain
-  const [blockchain, setBlockchain] = useState<string>('');
+  const [blockchain, setBlockchain] = useState<string>("");
 
   // Payment method
-  const [paymentMethod, setPaymentMethod]   = useState<PaymentOptions>('wallet');
-  const [selectedWallet, setSelectedWallet] = useState<string>('');
+  const [paymentMethod, setPaymentMethod] = useState<PaymentOptions>("wallet");
+  const [selectedWallet, setSelectedWallet] = useState<string>("");
 
   // Terra wallet
-  const [terraWalletAddress, setTerraWalletAddress] = useState<string>('');
-  const [terraUstBalance, setTerraUstBalance]       = useState<number>(0);
+  const [terraWalletAddress, setTerraWalletAddress] = useState<string>("");
+  const [terraUstBalance, setTerraUstBalance] = useState<number>(0);
   const [terraWalletLoading, setTerraWalletLoading] = useState<boolean>(false);
-  const [transactionAddress, setTransactionAddress] = useState<string>('');
+  const [transactionAddress, setTransactionAddress] = useState<string>("");
 
   // Solana wallet
-  const [phantomWalletConnected, setPhantomWalletConnected]   = useState<boolean>(false);
-  const [solflareWalletConnected, setSolflareWalletConnected] = useState<boolean>(false);
-  const [solanaWalletAddress, setSolanaWalletAddress]         = useState<string>('');
-  const [solanaUsdcBalance, setSolanaUsdcBalance]             = useState<number>(0);
-  const [solanaWalletLoading, setSolanaWalletLoading]         = useState<boolean>(false);
+  const [phantomWalletConnected, setPhantomWalletConnected] =
+    useState<boolean>(false);
+  const [solflareWalletConnected, setSolflareWalletConnected] =
+    useState<boolean>(false);
+  const [solanaWalletAddress, setSolanaWalletAddress] = useState<string>("");
+  const [solanaUsdcBalance, setSolanaUsdcBalance] = useState<number>(0);
+  const [solanaWalletLoading] = useState<boolean>(false);
 
   const wallet = useWallet();
   const { userStore } = useStores();
   const { terra }: { terra: LCDClient } = userStore;
 
   const getTerraBalance = async (walletAddress: string) => {
-    if (walletAddress === '') return 0;
+    if (walletAddress === "") return 0;
 
     setTerraWalletLoading(true);
     const balance = await userStore.getTerraBalances(walletAddress);
@@ -96,30 +97,37 @@ const CheckoutForm = ({
       setTerraUstBalance(balance.balances?.ust);
     }
     setTerraWalletLoading(false);
-  }
+  };
 
   /* If Terra connected, check balance */
   useEffect(() => {
-    if (wallet && wallet.status === 'WALLET_CONNECTED' && terraWalletAddress === '') {
+    if (
+      wallet &&
+      wallet.status === "WALLET_CONNECTED" &&
+      terraWalletAddress === ""
+    ) {
       const terraWallet = wallet.wallets[0];
       setTerraWalletAddress(terraWallet.terraAddress);
       getTerraBalance(terraWallet.terraAddress);
     }
 
     // TODO: if Solana wallet connected, get balance
+
+    // eslint-disable-next-line
   }, [wallet, userStore]);
 
   const onDisconnectWallet = () => {
     wallet.disconnect();
     userStore.resetUser();
-    setTerraWalletAddress('');
+    setTerraWalletAddress("");
     setTerraUstBalance(0);
-    setSolanaWalletAddress('');
+    setSolanaWalletAddress("");
     setSolanaUsdcBalance(0);
-  }
+  };
 
   const checkWallet = () => {
-    return ((terraWalletAddress && terraWalletAddress !== '') || (solanaWalletAddress && solanaWalletAddress !== ''))
+    return (terraWalletAddress && terraWalletAddress !== "") ||
+      (solanaWalletAddress && solanaWalletAddress !== "")
       ? true
       : false;
   };
@@ -143,17 +151,21 @@ const CheckoutForm = ({
   };
 
   const queryForDeposit = async () => {
-    let address = '';
+    let address = "";
 
-    if (blockchain === 'terra' && terraWalletAddress === '') {
+    if (blockchain === "terra" && terraWalletAddress === "") {
       setError(true);
-      setErrorMessage('No Terra Wallet connection found. Please refresh and try again.');
+      setErrorMessage(
+        "No Terra Wallet connection found. Please refresh and try again."
+      );
       return;
     }
 
-    if (blockchain === 'solana' && solanaWalletAddress === '') {
+    if (blockchain === "solana" && solanaWalletAddress === "") {
       setError(true);
-      setErrorMessage('No Solana Wallet connection found. Please refresh and try again.');
+      setErrorMessage(
+        "No Solana Wallet connection found. Please refresh and try again."
+      );
       return;
     }
 
@@ -162,24 +174,24 @@ const CheckoutForm = ({
       taxFee: taxTotal,
       blockchain: {
         origin: blockchain,
-        method: 'deposit',
+        method: "deposit",
       },
       exchangeRate: exchangeRate,
     };
 
-    if (blockchain === 'terra') {
-      order['purchaseMethod'] = 'terra';
+    if (blockchain === "terra") {
+      order["purchaseMethod"] = "terra";
       if (order.blockchain) {
-        order.blockchain['network'] = config.lcdClient.url;
+        order.blockchain["network"] = config.lcdClient.url;
       }
       address = config.lcdClient.ustAddress;
-    } else if (blockchain === 'solana') {
-      order['purchaseMethod'] = 'solana';
+    } else if (blockchain === "solana") {
+      order["purchaseMethod"] = "solana";
       if (order.blockchain) {
-        order.blockchain['network'] = config.solana.network;
+        order.blockchain["network"] = config.solana.network;
       }
 
-      const createTxResponse = await createTransaction('SOL');
+      const createTxResponse = await createTransaction("SOL");
       if (createTxResponse && createTxResponse.success) {
         address = createTxResponse.data.address;
         setTransactionAddress(address);
@@ -187,16 +199,22 @@ const CheckoutForm = ({
     }
 
     setTimeout(() => {
-      pollForDeposit(blockchain, address, terraWalletAddress, cartPriceTotal, order);
+      pollForDeposit(
+        blockchain,
+        address,
+        terraWalletAddress,
+        cartPriceTotal,
+        order
+      );
     }, 1000);
-  }
+  };
 
   /* Stepper function for moving between checkout steps */
   const completeStep = async (e, step: number) => {
     e.preventDefault();
 
     if (step === 3) {
-      if (paymentMethod === 'deposit') {
+      if (paymentMethod === "deposit") {
         queryForDeposit();
       }
     }
@@ -205,30 +223,30 @@ const CheckoutForm = ({
     let completed = completedSteps;
     completed.push(step);
     setCompletedSteps(completed);
-  }
-
-  const handleSetBlockchain = val => {
-    setBlockchain(val);
-    setSelectedWallet('');
   };
 
-  const handleSetSelectedWallet = val => {
+  const handleSetBlockchain = (val) => {
+    setBlockchain(val);
+    setSelectedWallet("");
+  };
+
+  const handleSetSelectedWallet = (val) => {
     setSelectedWallet(val);
-    if (val === 'WALLETCONNECT') {
+    if (val === "WALLETCONNECT") {
       connectTerraWallet(ConnectType.WALLETCONNECT);
-    } else if (val === 'TERRA') {
+    } else if (val === "TERRA") {
       // TODO Pause this in the UI to show a loading state.
       // TODO Figure out why this is happening when the page loads without button click.
       connectTerraWallet(ConnectType.EXTENSION);
-    } else if (val === 'PHANTOM') {
-      connectSolanaWallet('phantom');
-    } else if (val === 'solflare') {
-      connectSolanaWallet('solflare');
+    } else if (val === "PHANTOM") {
+      connectSolanaWallet("phantom");
+    } else if (val === "solflare") {
+      connectSolanaWallet("solflare");
     }
-  }
+  };
 
   const checkTerraMainnetActive = () => {
-    const activeNetwork = config.lcdClient.network || 'mainnet';
+    const activeNetwork = config.lcdClient.network || "mainnet";
     return wallet && wallet.network && wallet.network.name === activeNetwork;
   };
 
@@ -236,39 +254,50 @@ const CheckoutForm = ({
     setTerraWalletLoading(true);
     await wallet.connect(type);
     setTerraWalletLoading(false);
-  }
+  };
 
-  const connectSolanaWallet  = async (type: string) => {
-    if (type === 'phantom' && phantomWalletConnected) return true;
-    if (type === 'solflare' && solflareWalletConnected) return true;
+  const connectSolanaWallet = async (type: string) => {
+    if (type === "phantom" && phantomWalletConnected) return true;
+    if (type === "solflare" && solflareWalletConnected) return true;
 
     const connection = getSolanaConnection();
     const provider = getProvider(type);
 
-    provider.on('connect', async () => {
-      if (type === 'phantom') {
+    provider.on("connect", async () => {
+      if (type === "phantom") {
         setPhantomWalletConnected(true);
         setSolanaWalletAddress(provider.publicKey?.toBase58());
-      } else if (type === 'solflare') {
+      } else if (type === "solflare") {
         setSolflareWalletConnected(true);
         setSolanaWalletAddress(provider.publicKey?.toBase58());
       }
 
       try {
-        const tokenAccounts = await connection.getParsedTokenAccountsByOwner(provider.publicKey, {
-          mint: new web3.PublicKey(config.solana.usdcAddress)
-        }, 'single'); 
-        if (tokenAccounts && tokenAccounts.value && tokenAccounts.value.length > 0) {
+        const tokenAccounts = await connection.getParsedTokenAccountsByOwner(
+          provider.publicKey,
+          {
+            mint: new web3.PublicKey(config.solana.usdcAddress),
+          },
+          "single"
+        );
+        if (
+          tokenAccounts &&
+          tokenAccounts.value &&
+          tokenAccounts.value.length > 0
+        ) {
           for (let i = 0; i < tokenAccounts.value.length; i += 1) {
             const account = tokenAccounts.value[i].account;
             const parsedInfo = account.data.parsed.info;
-            if ((parsedInfo.mint === config.solana.usdcAddress) && parsedInfo.tokenAmount?.uiAmount) {
-              setSolanaUsdcBalance(parsedInfo.tokenAmount.uiAmount)
+            if (
+              parsedInfo.mint === config.solana.usdcAddress &&
+              parsedInfo.tokenAmount?.uiAmount
+            ) {
+              setSolanaUsdcBalance(parsedInfo.tokenAmount.uiAmount);
             }
           }
         }
       } catch (err) {
-        console.error('Could not fetch token accounts');
+        console.error("Could not fetch token accounts");
         console.error(err);
       }
     });
@@ -276,21 +305,21 @@ const CheckoutForm = ({
     try {
       await provider.connect();
     } catch (err) {
-      console.error('Error: ' + JSON.stringify(err));
+      console.error("Error: " + JSON.stringify(err));
     }
   };
 
   const getProvider = (type: string) => {
-    if (type === 'phantom') {
-      if ('solana' in window) {
+    if (type === "phantom") {
+      if ("solana" in window) {
         const anyWindow: any = window;
         const provider = anyWindow.solana;
         if (provider.isPhantom) {
           return provider;
         }
       }
-    } else if (type === 'solflare') {
-      if ('solflare' in window) {
+    } else if (type === "solflare") {
+      if ("solflare" in window) {
         const anyWindow: any = window;
         const provider = anyWindow.solflare;
         if (provider.isSolflare) {
@@ -304,7 +333,7 @@ const CheckoutForm = ({
   const getSolanaConnection = () => {
     const connection = new web3.Connection(
       web3.clusterApiUrl(config.solana.network as Cluster),
-      'confirmed',
+      "confirmed"
     );
     return connection;
   };
@@ -319,50 +348,53 @@ const CheckoutForm = ({
     const stepIndex = completedSteps.indexOf(step);
     completed.splice(stepIndex, 1);
     setCompletedSteps(completed);
-  }
+  };
 
   const handleCheckoutSuccess = () => {
     // TODO
-  }
+  };
 
   const handleCheckoutError = (msg?: string) => {
     // TODO
-  }
+  };
 
-  const handleSolanaCheckout = async() => {
+  const handleSolanaCheckout = async () => {
     let convertPrice: number | string = centsToDollars(cartPriceTotal);
-    convertPrice = convertPrice.replace('.', '');
+    convertPrice = convertPrice.replace(".", "");
     if (convertPrice) {
       convertPrice = parseInt(convertPrice) * 10000;
     }
 
     const connection = getSolanaConnection();
     const provider = getProvider(selectedWallet);
-    const mintPublicKey = new web3.PublicKey(config.solana.usdcAddress);    
+    const mintPublicKey = new web3.PublicKey(config.solana.usdcAddress);
     const mintToken = new Token(
       connection,
       mintPublicKey,
       TOKEN_PROGRAM_ID,
       provider
     );
-          
+
     const fromTokenAccount = await mintToken.getOrCreateAssociatedAccountInfo(
       provider.publicKey
     );
-    
+
     // TODO: Needs to pull dynamic from organization
-    const address: string = '7fZt2UNqriqXBnuEUYh4WZP5bDdfP1QbT14nopD1AU1o';
+    const address: string = "7fZt2UNqriqXBnuEUYh4WZP5bDdfP1QbT14nopD1AU1o";
     const destPublicKey = new web3.PublicKey(address);
 
     // Get the derived address of the destination wallet which will hold the custom token
-    const associatedDestinationTokenAddr = await Token.getAssociatedTokenAddress(
-      mintToken.associatedProgramId,
-      mintToken.programId,
-      mintPublicKey,
-      destPublicKey
+    const associatedDestinationTokenAddr =
+      await Token.getAssociatedTokenAddress(
+        mintToken.associatedProgramId,
+        mintToken.programId,
+        mintPublicKey,
+        destPublicKey
+      );
+    const receiverAccount = await connection.getAccountInfo(
+      associatedDestinationTokenAddr
     );
-    const receiverAccount = await connection.getAccountInfo(associatedDestinationTokenAddr);
-    const instructions: web3.TransactionInstruction[] = [];  
+    const instructions: web3.TransactionInstruction[] = [];
     if (receiverAccount === null) {
       instructions.push(
         Token.createAssociatedTokenAccountInstruction(
@@ -373,7 +405,7 @@ const CheckoutForm = ({
           destPublicKey,
           provider.publicKey
         )
-      )
+      );
     }
     instructions.push(
       Token.createTransferInstruction(
@@ -382,7 +414,7 @@ const CheckoutForm = ({
         associatedDestinationTokenAddr,
         provider.publicKey,
         [],
-        convertPrice as number,
+        convertPrice as number
       )
     );
 
@@ -398,20 +430,22 @@ const CheckoutForm = ({
           shippingFee: 0,
           taxFee: taxTotal,
           solanaTx: transaction,
-          purchaseMethod: 'solana',
+          purchaseMethod: "solana",
           blockchain: {
             origin: blockchain,
             network: config.solana.network,
-            method: 'wallet'
+            method: "wallet",
           },
           exchangeRate: exchangeRate,
         };
 
         const signed = await provider.signTransaction(transaction);
-        const signature = await connection.sendRawTransaction(signed.serialize());
+        const signature = await connection.sendRawTransaction(
+          signed.serialize()
+        );
         await connection.confirmTransaction(signature);
         const orderResp = await createOrder(orderData);
-        
+
         if (orderResp && orderResp.success) {
           setTimeout(async () => {
             if (orderResp.data && orderResp.data.orderId) {
@@ -422,23 +456,23 @@ const CheckoutForm = ({
           handleCheckoutError();
         }
       } catch (err) {
-        console.error('Error: ' + JSON.stringify(err));
+        console.error("Error: " + JSON.stringify(err));
         handleCheckoutError();
       }
     }
     return true;
-  }
+  };
 
-  const handleTerraCheckout = async() => {
+  const handleTerraCheckout = async () => {
     if (checkTerraMainnetActive()) {
-      if (wallet && wallet.status !== 'WALLET_CONNECTED') {
+      if (wallet && wallet.status !== "WALLET_CONNECTED") {
         setError(true);
-        setErrorMessage('No Terra Wallet connection found.');
+        setErrorMessage("No Terra Wallet connection found.");
       }
 
       if (wallet) {
         let convertPriceToUst = centsToDollars(cartPriceTotal);
-        convertPriceToUst = convertPriceToUst.replace('.', '');
+        convertPriceToUst = convertPriceToUst.replace(".", "");
         if (convertPriceToUst) {
           convertPriceToUst = (parseInt(convertPriceToUst) * 10000).toString();
         }
@@ -455,106 +489,124 @@ const CheckoutForm = ({
           [{ publicKey: terraWalletAddress, sequenceNumber: 123 }],
           {
             msgs: [stdTxMsgSend],
-            gasPrices: { uusd: 0.15 }
-          },
+            gasPrices: { uusd: 0.15 },
+          }
         );
 
-        if (wallet.status === 'WALLET_CONNECTED') {
+        if (wallet.status === "WALLET_CONNECTED") {
           const orderData: ICreateOrderRequest = {
             shippingFee: 0,
             taxFee: taxTotal,
             ustPriceTotal: convertPriceToUst,
-            purchaseMethod: 'terra',
+            purchaseMethod: "terra",
             blockchain: {
               origin: blockchain,
               network: wallet.network.chainID,
-              method: 'wallet'
+              method: "wallet",
             },
             exchangeRate: exchangeRate,
           };
 
-          await wallet.post({
-            msgs: [stdTxMsgSend],
-            memo: config.lcdClient.ustMemo,
-            fee: stdFeeEstimate,
-          }).then(async (payload: any) => {
-            const { success, error } = payload;
-            if (error) {
-              setError(true);
-              setCheckoutLoading(false);
+          await wallet
+            .post({
+              msgs: [stdTxMsgSend],
+              memo: config.lcdClient.ustMemo,
+              fee: stdFeeEstimate,
+            })
+            .then(async (payload: any) => {
+              const { success, error } = payload;
+              if (error) {
+                setError(true);
+                setCheckoutLoading(false);
 
-              if (error.code && error.code === 1) {
-                setErrorMessage('Terra Station transaction declined.');
-              } else {
-                if (error.code && error.message) {
-                  setErrorMessage(error.message);
+                if (error.code && error.code === 1) {
+                  setErrorMessage("Terra Station transaction declined.");
+                } else {
+                  if (error.code && error.message) {
+                    setErrorMessage(error.message);
+                  }
+                }
+
+                return;
+              }
+
+              if (success) {
+                const orderResp = await createOrder({
+                  ...orderData,
+                  terraTx: payload,
+                });
+                if (orderResp && orderResp.success) {
+                  setTimeout(async () => {
+                    await userStore.getTerraBalances(terraWalletAddress);
+                    if (orderResp.data && orderResp.data.orderId) {
+                      handleCheckoutSuccess();
+                    }
+                  }, 2500);
+                } else {
+                  handleCheckoutError();
+                  console.error(
+                    "Error generating order after successful transaction. order: ",
+                    JSON.stringify(orderResp)
+                  );
                 }
               }
-
-              return;
-            }
-
-            if (success) {
-              const orderResp = await createOrder({ ...orderData, terraTx: payload });
-              if (orderResp && orderResp.success) {
-                setTimeout( async() => {
-                  await userStore.getTerraBalances(terraWalletAddress);
-                  if (orderResp.data && orderResp.data.orderId) {
-                    handleCheckoutSuccess();
-                  }
-                }, 2500);
+            })
+            .catch((error) => {
+              console.error("error", error);
+              handleCheckoutError();
+              const err =
+                typeof error === "object" ? JSON.stringify(error) : error;
+              let errParse = JSON.parse(err);
+              if (errParse && errParse.name === "UserDenied") {
+                setErrorMessage("User Denied Request");
               } else {
-                handleCheckoutError();
-                console.error('Error generating order after successful transaction. order: ', JSON.stringify(orderResp));
+                setErrorMessage(err);
               }
-            }
-          }).catch(error => {
-            console.error('error', error);
-            handleCheckoutError();
-            const err = (typeof error === 'object') ? JSON.stringify(error) : error;
-            let errParse = JSON.parse(err);
-            if (errParse && errParse.name === 'UserDenied') {
-              setErrorMessage('User Denied Request');
-            } else {
-              setErrorMessage(err);
-            }
-          });
+            });
         } else {
           // Error getting extension available
           setError(true);
           setCheckoutLoading(false);
-          setErrorMessage('Could not connect to Terra Station Wallet.');
+          setErrorMessage("Could not connect to Terra Station Wallet.");
         }
       }
     } else {
       setError(true);
-      setErrorMessage(`Invalid network selected, please change network to ${config.lcdClient.network} and try again.`);
+      setErrorMessage(
+        `Invalid network selected, please change network to ${config.lcdClient.network} and try again.`
+      );
       setLoading(false);
       setCheckoutLoading(false);
     }
-  }
+  };
 
-  const handleCheckout = async e => {
+  const handleCheckout = async (e) => {
     e.preventDefault();
     setError(false);
-    setErrorMessage('');
+    setErrorMessage("");
     setCheckoutLoading(true);
 
-    if (blockchain === 'solana') {
+    if (blockchain === "solana") {
       handleSolanaCheckout();
     }
 
-    if (blockchain === 'terra') {
+    if (blockchain === "terra") {
       handleTerraCheckout();
     }
   };
 
-  const pollForDeposit = (blockchain, address, walletAddress, orderTotal, orderData) => {
+  const pollForDeposit = (
+    blockchain,
+    address,
+    walletAddress,
+    orderTotal,
+    orderData
+  ) => {
     // Repeat with an interval of 10 seconds
     const timerId = setInterval(async () => {
-      if (blockchain === 'terra') {
+      if (blockchain === "terra") {
         let convertPriceToUst: any = centsToDollars(orderTotal);
-        convertPriceToUst = convertPriceToUst.replace('.', '');
+        convertPriceToUst = convertPriceToUst.replace(".", "");
         if (convertPriceToUst) {
           convertPriceToUst = parseInt(convertPriceToUst) * 10000;
         }
@@ -573,7 +625,7 @@ const CheckoutForm = ({
         //     previousAmountTxHashes = previousAmountTransactions.data.previousAmountTxHashes;
         //   }
         // }
-        
+
         if (transactions) {
           const { txs } = transactions;
           if (txs) {
@@ -583,22 +635,28 @@ const CheckoutForm = ({
               if (!value) return;
               const { msg } = value || [];
               for (const m of msg) {
-                if (m.type === 'bank/MsgSend') {
+                if (m.type === "bank/MsgSend") {
                   const { amount, to_address, from_address } = m.value;
                   // TODO: to_address match must be to end-merchant, not static config
-                  if (from_address === walletAddress && to_address === config.lcdClient.ustAddress) {
+                  if (
+                    from_address === walletAddress &&
+                    to_address === config.lcdClient.ustAddress
+                  ) {
                     for (const a of amount) {
                       const amt = parseInt(a.amount);
-                      if (amt === convertPriceToUst && !previousAmountTxHashes.includes(txhash)) {
+                      if (
+                        amt === convertPriceToUst &&
+                        !previousAmountTxHashes.includes(txhash)
+                      ) {
                         // Clear interval
                         clearInterval(timerId);
                         const orderResp = await createOrder({
                           ...orderData,
                           terraTx: t,
-                          ustPriceTotal: convertPriceToUst
+                          ustPriceTotal: convertPriceToUst,
                         });
                         if (orderResp && orderResp.success) {
-                          setTimeout( async() => {
+                          setTimeout(async () => {
                             if (orderResp.data && orderResp.data.orderId) {
                               setOrderId(orderResp.data.orderId);
                               handleCheckoutSuccess();
@@ -607,7 +665,9 @@ const CheckoutForm = ({
                         } else {
                           setError(true);
                           setCheckoutLoading(false);
-                          setErrorMessage('An error occurred generating your order. Please contact support if you require further assistance.');
+                          setErrorMessage(
+                            "An error occurred generating your order. Please contact support if you require further assistance."
+                          );
                         }
                       }
                     }
@@ -617,9 +677,9 @@ const CheckoutForm = ({
             }
           }
         }
-      } else if (blockchain === 'solana') {
+      } else if (blockchain === "solana") {
         let convertPrice: any = centsToDollars(orderTotal);
-        convertPrice = convertPrice.replace('.', '');
+        convertPrice = convertPrice.replace(".", "");
 
         if (convertPrice) {
           convertPrice = parseInt(convertPrice) * 10000;
@@ -633,15 +693,22 @@ const CheckoutForm = ({
             const { tx } = data;
             if (tx && tx.transactions && tx.transactions.length >= 1) {
               for (let t of tx.transactions) {
-                if (t.status === 'Success' && t.change && t.change.symbol === 'USDC') {
+                if (
+                  t.status === "Success" &&
+                  t.change &&
+                  t.change.symbol === "USDC"
+                ) {
                   const usdcAmount = t.change.changeAmount;
 
                   if (usdcAmount === convertPrice) {
                     // Clear interval
                     clearInterval(timerId);
-                    const orderResp = await createOrder({ ...orderData, solanaTx: t });
+                    const orderResp = await createOrder({
+                      ...orderData,
+                      solanaTx: t,
+                    });
                     if (orderResp && orderResp.success) {
-                      setTimeout( async() => {
+                      setTimeout(async () => {
                         if (orderResp.data && orderResp.data.orderId) {
                           setOrderId(orderResp.data.orderId);
                           handleCheckoutSuccess();
@@ -650,7 +717,9 @@ const CheckoutForm = ({
                     } else {
                       setError(true);
                       setCheckoutLoading(false);
-                      setErrorMessage('An error occurred generating your order. Please contact support if you require further assistance.');
+                      setErrorMessage(
+                        "An error occurred generating your order. Please contact support if you require further assistance."
+                      );
                     }
                   }
                 }
@@ -662,8 +731,8 @@ const CheckoutForm = ({
     }, 10 * 1000);
 
     // Stop polling after 20 minutes
-    setTimeout(() => { 
-      clearInterval(timerId); 
+    setTimeout(() => {
+      clearInterval(timerId);
     }, 20 * 60 * 1000);
   };
 
@@ -676,23 +745,23 @@ const CheckoutForm = ({
           <p>Complete your purchase with UST or USDC</p>
         </CheckoutHeaderContent>
         <CheckoutHeaderButtons>
-          <button type='button' title='Close'>
-            <Icon name='ModalClose' />
+          <button type="button" title="Close">
+            <Icon name="ModalClose" />
           </button>
         </CheckoutHeaderButtons>
       </CheckoutHeader>
 
       {/* Price */}
-      <StepOne 
+      <StepOne
         cartPriceTotal={cartPriceTotal}
         step={step}
         completedSteps={completedSteps}
       />
-      
+
       {/* Blockchain + Wallet */}
       <StepTwo
         step={step}
-        completedSteps={completedSteps} 
+        completedSteps={completedSteps}
         completeStep={completeStep}
         blockchain={blockchain}
         handleSetBlockchain={handleSetBlockchain}
@@ -726,12 +795,11 @@ const CheckoutForm = ({
         checkoutLoading={checkoutLoading}
         cartPriceTotal={cartPriceTotal}
         transactionAddress={transactionAddress}
-        handleCheckout={handleCheckout} 
+        handleCheckout={handleCheckout}
         checkoutDisabled={checkoutDisabled}
       />
-    
     </CartContainerDetail>
   );
-}
+};
 
 export default CheckoutForm;
