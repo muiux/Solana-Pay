@@ -19,12 +19,12 @@ import {
 
 const CheckoutPage = observer(() => {
   const [loading, setLoading]                   = useState<boolean>(false);
-  const [orderId, setOrderId]                   = useState<string>('');
+  const [, setOrderId]                   = useState<string>('');
   const [cartPriceTotal]                        = useState<number>(2199);
   const [taxTotal, setTaxTotal]                 = useState<number>(0);
-  const [taxRate, setTaxRate]                   = useState<number>(0);
-  const [checkoutDisabled, setCheckoutDisabled] = useState<boolean>(false);
-  const [exchangeRate, setExchangeRate]         = useState<number>(0);
+  const [, setTaxRate]                   = useState<number>(0);
+  const [checkoutDisabled] = useState<boolean>(false);
+  const [exchangeRate]         = useState<number>(0);
   const disabledBannerVisible                   = false;
 
   return (

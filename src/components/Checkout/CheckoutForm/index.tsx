@@ -58,8 +58,8 @@ const CheckoutForm = ({
 }: IProps) => {
   // Global
   const [checkoutLoading, setCheckoutLoading] = useState<boolean>(false);
-  const [error, setError]                     = useState<boolean>(false);
-  const [errorMessage, setErrorMessage]       = useState<string>('');
+  const [, setError]                     = useState<boolean>(false);
+  const [, setErrorMessage]       = useState<string>('');
   const [step, setStep]                       = useState<number>(2);
   const [completedSteps, setCompletedSteps]   = useState<number[]>([]);
 
@@ -81,7 +81,7 @@ const CheckoutForm = ({
   const [solflareWalletConnected, setSolflareWalletConnected] = useState<boolean>(false);
   const [solanaWalletAddress, setSolanaWalletAddress]         = useState<string>('');
   const [solanaUsdcBalance, setSolanaUsdcBalance]             = useState<number>(0);
-  const [solanaWalletLoading, setSolanaWalletLoading]         = useState<boolean>(false);
+  const [solanaWalletLoading]         = useState<boolean>(false);
 
   const wallet = useWallet();
   const { userStore } = useStores();
@@ -107,6 +107,7 @@ const CheckoutForm = ({
     }
 
     // TODO: if Solana wallet connected, get balance
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [wallet, userStore]);
 
   const onDisconnectWallet = () => {

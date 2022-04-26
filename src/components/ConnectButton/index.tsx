@@ -55,6 +55,7 @@ const ConnectButton = observer((props: Props) => {
       if (setTerraWalletAddress) setTerraWalletAddress(connectedWallet.terraAddress);
     }
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [connectedWallet]);
 
   const onDisconnect = () => {
@@ -98,7 +99,7 @@ const ConnectButton = observer((props: Props) => {
               }}
             >
               <ConnectButtonItemInner>
-                <img src='https://assets.terra.money/icon/station-extension/icon.png' />
+                <img src='https://assets.terra.money/icon/station-extension/icon.png' alt='' />
                 <span>
                   <h5>Terra Station</h5>
                   <h6>Extension{isTerraInstalled ? <span><span>found</span></span> : null}</h6>
