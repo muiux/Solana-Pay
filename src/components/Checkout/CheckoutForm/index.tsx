@@ -1,15 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import {
-  MsgSend,
-  LCDClient
-} from '@terra-money/terra.js';
+import { MsgSend } from '@terra-money/terra.js';
 import Icon from '../../Icon';
 import { centsToDollars } from '../../../utils/centsToDollars';
 import { CartContainerDetail, CheckoutHeader, CheckoutHeaderButtons, CheckoutHeaderContent } from './styles';
 import {
   ICreateOrderRequest,
   ICreateOrderResponse,
-  createTransaction,
+  useKadoApi,
   getTerraTransactions,
   getSolanaTransactions,
 } from '../../../utils/apiServices';
@@ -20,11 +17,11 @@ import {
 } from '@terra-money/wallet-provider';
 import * as web3 from '@solana/web3.js';
 import { Token, TOKEN_PROGRAM_ID } from '@solana/spl-token';
-import { useStores } from '../../../hooks/useStores';
 import StepOne from './Steps/StepOne';
 import StepTwo from './Steps/StepTwo';
 import StepThree from './Steps/StepThree';
 import { Cluster, PaymentOptions } from './types';
+import { useWalletOverride } from '../../../states/user/hooks';
 
 declare global {
   interface Window {
@@ -58,8 +55,8 @@ const CheckoutForm = ({
 }: IProps) => {
   // Global
   const [checkoutLoading, setCheckoutLoading] = useState<boolean>(false);
-  const [error, setError]                     = useState<boolean>(false);
-  const [errorMessage, setErrorMessage]       = useState<string>('');
+  const [, setError]                     = useState<boolean>(false);
+  const [, setErrorMessage]       = useState<string>('');
   const [step, setStep]                       = useState<number>(2);
   const [completedSteps, setCompletedSteps]   = useState<number[]>([]);
 
@@ -81,19 +78,20 @@ const CheckoutForm = ({
   const [solflareWalletConnected, setSolflareWalletConnected] = useState<boolean>(false);
   const [solanaWalletAddress, setSolanaWalletAddress]         = useState<string>('');
   const [solanaUsdcBalance, setSolanaUsdcBalance]             = useState<number>(0);
-  const [solanaWalletLoading, setSolanaWalletLoading]         = useState<boolean>(false);
+  const [solanaWalletLoading]         = useState<boolean>(false);
 
   const wallet = useWallet();
-  const { userStore } = useStores();
-  const { terra }: { terra: LCDClient } = userStore;
+  const { terra, getTerraBalancesByAddress, resetUser } = useWalletOverride();
+
+  const { createTransaction } = useKadoApi()
 
   const getTerraBalance = async (walletAddress: string) => {
     if (walletAddress === '') return 0;
 
     setTerraWalletLoading(true);
-    const balance = await userStore.getTerraBalances(walletAddress);
-    if (balance && balance?.balances && balance.balances?.ust) {
-      setTerraUstBalance(balance.balances?.ust);
+    const balances = await getTerraBalancesByAddress(walletAddress);
+    if (balances && balances.ust) {
+      setTerraUstBalance(balances.ust);
     }
     setTerraWalletLoading(false);
   }
@@ -107,11 +105,12 @@ const CheckoutForm = ({
     }
 
     // TODO: if Solana wallet connected, get balance
-  }, [wallet, userStore]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [wallet]);
 
   const onDisconnectWallet = () => {
     wallet.disconnect();
-    userStore.resetUser();
+    resetUser();
     setTerraWalletAddress('');
     setTerraUstBalance(0);
     setSolanaWalletAddress('');
@@ -498,7 +497,7 @@ const CheckoutForm = ({
               const orderResp = await createOrder({ ...orderData, terraTx: payload });
               if (orderResp && orderResp.success) {
                 setTimeout( async() => {
-                  await userStore.getTerraBalances(terraWalletAddress);
+                  await getTerraBalancesByAddress(terraWalletAddress);
                   if (orderResp.data && orderResp.data.orderId) {
                     handleCheckoutSuccess();
                   }

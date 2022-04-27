@@ -61,7 +61,7 @@ const StepTwo = (props: IStepTwoProps) => {
 
     solanaUsdcBalance,
     solanaWalletAddress,
-    solanaWalletLoading,
+    // solanaWalletLoading,
     
     checkWallet,
     checkTerraBalance,
