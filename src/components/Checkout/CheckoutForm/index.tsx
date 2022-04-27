@@ -1,30 +1,27 @@
 import React, { useEffect, useState } from 'react';
-import {
-  MsgSend,
-  LCDClient
-} from '@terra-money/terra.js';
+import { MsgSend } from '@terra-money/terra.js';
 import Icon from '../../Icon';
 import { centsToDollars } from '../../../utils/centsToDollars';
 import { CartContainerDetail, CheckoutHeader, CheckoutHeaderButtons, CheckoutHeaderContent } from './styles';
 import {
   ICreateOrderRequest,
   ICreateOrderResponse,
-  createTransaction,
+  useKadoApi,
   getTerraTransactions,
   getSolanaTransactions,
 } from '../../../utils/apiServices';
 import config from '../../../utils/config';
 import {
-  useWallet,
+  useWallet as useTerraWallet,
   ConnectType
 } from '@terra-money/wallet-provider';
 import * as web3 from '@solana/web3.js';
 import { Token, TOKEN_PROGRAM_ID } from '@solana/spl-token';
-import { useStores } from '../../../hooks/useStores';
 import StepOne from './Steps/StepOne';
 import StepTwo from './Steps/StepTwo';
 import StepThree from './Steps/StepThree';
 import { Cluster, PaymentOptions } from './types';
+import { useWallet } from '../../../states/user/hooks';
 
 declare global {
   interface Window {
@@ -83,17 +80,18 @@ const CheckoutForm = ({
   const [solanaUsdcBalance, setSolanaUsdcBalance]             = useState<number>(0);
   const [solanaWalletLoading]         = useState<boolean>(false);
 
-  const wallet = useWallet();
-  const { userStore } = useStores();
-  const { terra }: { terra: LCDClient } = userStore;
+  const wallet = useTerraWallet();
+  const { terra, getTerraBalancesByAddress, resetUser } = useWallet();
+
+  const { createTransaction } = useKadoApi()
 
   const getTerraBalance = async (walletAddress: string) => {
     if (walletAddress === '') return 0;
 
     setTerraWalletLoading(true);
-    const balance = await userStore.getTerraBalances(walletAddress);
-    if (balance && balance?.balances && balance.balances?.ust) {
-      setTerraUstBalance(balance.balances?.ust);
+    const balances = await getTerraBalancesByAddress(walletAddress);
+    if (balances && balances.ust) {
+      setTerraUstBalance(balances.ust);
     }
     setTerraWalletLoading(false);
   }
@@ -108,11 +106,11 @@ const CheckoutForm = ({
 
     // TODO: if Solana wallet connected, get balance
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [wallet, userStore]);
+  }, [wallet]);
 
   const onDisconnectWallet = () => {
     wallet.disconnect();
-    userStore.resetUser();
+    resetUser();
     setTerraWalletAddress('');
     setTerraUstBalance(0);
     setSolanaWalletAddress('');
@@ -499,7 +497,7 @@ const CheckoutForm = ({
               const orderResp = await createOrder({ ...orderData, terraTx: payload });
               if (orderResp && orderResp.success) {
                 setTimeout( async() => {
-                  await userStore.getTerraBalances(terraWalletAddress);
+                  await getTerraBalancesByAddress(terraWalletAddress);
                   if (orderResp.data && orderResp.data.orderId) {
                     handleCheckoutSuccess();
                   }

@@ -1,11 +1,10 @@
 import { useState } from 'react';
 import Fade from 'react-reveal/Fade';
-import { observer } from 'mobx-react';
 import Layout from '../Layout';
 import Loader from '../../components/Loader';
 import Icon from '../../components/Icon';
 import { ContainerWrapper } from '../../components/Global/variables';
-import { createOrder } from '../../utils/apiServices';
+import { useKadoApi } from '../../utils/apiServices';
 import CheckoutForm from '../../components/Checkout/CheckoutForm';
 
 import {
@@ -17,7 +16,7 @@ import {
   DisabledBannerItem
 } from './styles';
 
-const CheckoutPage = observer(() => {
+const CheckoutPage: React.FC = () => {
   const [loading, setLoading]                   = useState<boolean>(false);
   const [, setOrderId]                   = useState<string>('');
   const [cartPriceTotal]                        = useState<number>(2199);
@@ -26,6 +25,7 @@ const CheckoutPage = observer(() => {
   const [checkoutDisabled] = useState<boolean>(false);
   const [exchangeRate]         = useState<number>(0);
   const disabledBannerVisible                   = false;
+  const { createOrder } = useKadoApi()
 
   return (
     <Layout>
@@ -75,6 +75,6 @@ const CheckoutPage = observer(() => {
       </CartContainerWrapper>
     </Layout>
   )
-});
+};
 
 export default CheckoutPage;
