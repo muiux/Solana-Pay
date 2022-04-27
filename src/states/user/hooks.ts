@@ -19,7 +19,7 @@ export function useAuth() {
   const user: UserState = useSelector((state: AppState) => state.user)
   const { auth } = user
 
-  const { resetUser } = useWallet()
+  const { resetUser } = useWalletOverride()
 
   function getAuth() {
     if (auth) {
@@ -128,7 +128,7 @@ export function useLocale() {
   }
 }
 
-export function useWallet() {
+export function useWalletOverride() {
   const dispatch = useDispatch()
   const userState: UserState = useSelector((state: AppState) => state.user)
   const { user, terraStationConnected, terra } = userState

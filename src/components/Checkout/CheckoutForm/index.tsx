@@ -12,7 +12,7 @@ import {
 } from '../../../utils/apiServices';
 import config from '../../../utils/config';
 import {
-  useWallet as useTerraWallet,
+  useWallet,
   ConnectType
 } from '@terra-money/wallet-provider';
 import * as web3 from '@solana/web3.js';
@@ -21,7 +21,7 @@ import StepOne from './Steps/StepOne';
 import StepTwo from './Steps/StepTwo';
 import StepThree from './Steps/StepThree';
 import { Cluster, PaymentOptions } from './types';
-import { useWallet } from '../../../states/user/hooks';
+import { useWalletOverride } from '../../../states/user/hooks';
 
 declare global {
   interface Window {
@@ -80,8 +80,8 @@ const CheckoutForm = ({
   const [solanaUsdcBalance, setSolanaUsdcBalance]             = useState<number>(0);
   const [solanaWalletLoading]         = useState<boolean>(false);
 
-  const wallet = useTerraWallet();
-  const { terra, getTerraBalancesByAddress, resetUser } = useWallet();
+  const wallet = useWallet();
+  const { terra, getTerraBalancesByAddress, resetUser } = useWalletOverride();
 
   const { createTransaction } = useKadoApi()
 

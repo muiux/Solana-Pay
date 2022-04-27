@@ -104,18 +104,11 @@ export function useKadoApi() {
       false
     )
 
-  const getTransactionByAmount = async (userId: string, amount: number) =>
-    await kadoApiRequest(`/v1/user/${userId}/order/${amount}`, 'GET')
-  const createTransaction = async (blockchain: string) =>
-    await kadoApiRequest('/v1/cart/create-tx', 'POST', { blockchain })
-  const checkTransactionStatus = async (address: string) =>
-    await kadoApiRequest(`/v1/cart/tx-status?address=${address}`, 'GET')
-  const createOrder = async (
-    data: ICreateOrderRequest
-  ): Promise<ICreateOrderResponse> =>
-    await kadoApiRequest(`/v1/order`, 'POST', data)
-  const querySalesTax = async (code: string) =>
-    await kadoApiRequest(`/v1/cart/sales-tax?zipcode=${code}`, 'GET')
+  const getTransactionByAmount = async (userId: string, amount: number) => await kadoApiRequest(`/v1/user/${userId}/order/${amount}`, 'GET')
+  const createTransaction = async (blockchain: string) => await kadoApiRequest('/v1/cart/create-tx', 'POST', { blockchain })
+  const checkTransactionStatus = async (address: string) => await kadoApiRequest(`/v1/cart/tx-status?address=${address}`, 'GET')
+  const createOrder = async (data: ICreateOrderRequest): Promise<ICreateOrderResponse> => await kadoApiRequest(`/v1/order`, 'POST', data)
+  const querySalesTax = async (code: string) => await kadoApiRequest(`/v1/cart/sales-tax?zipcode=${code}`, 'GET')
 
   return {
     getTransactionByAmount,

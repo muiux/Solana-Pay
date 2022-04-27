@@ -28,7 +28,7 @@ class SelectLocaleDropdown extends React.Component<ISelectedLocaleProps, ISelect
   wrapperRef: RefObject<HTMLDivElement> | any;
   
   state = {
-		selectedOption: '',
+    selectedOption: '',
     showDropdown: false
   }
 

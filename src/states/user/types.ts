@@ -19,7 +19,7 @@ export interface IStoreResponse {
 export interface IUser {
   address?: string;
   balances?: {
-    [x: string]: number; //  TODO: BigNumber
+    [x: string]: number;
   };
 }
 

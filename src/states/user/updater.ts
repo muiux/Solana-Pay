@@ -1,8 +1,8 @@
 import { useEffect } from 'react';
-import { useWallet } from './hooks';
+import { useWalletOverride } from './hooks';
 
 const Updater = () => {
-  const { address, getTerraBalancesByAddress } = useWallet();
+  const { address, getTerraBalancesByAddress } = useWalletOverride();
 
   useEffect(() => {
     if (address) {
