@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import localStore from '../utils/localStore';
-import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { isLocale } from '../translations/types';
 import { getInitLocale, defaultLocale } from '../translations/config';
 import config from '../utils/config';
@@ -12,10 +11,10 @@ interface ContextProps {
 
 export const LocaleContext = React.createContext<ContextProps>({
   locale: '',
-  setLocale: () => null
+  setLocale: () => null,
 });
 
-export const LocaleProvider = withRouter(({ lang, children }: RouteComponentProps<any> & { lang: string; children?: React.ReactNode; }) => {
+export const LocaleProvider = ({ lang, children }) => {
   const [locale, setLocale] = useState(lang);
 
   useEffect(() => {
@@ -37,4 +36,4 @@ export const LocaleProvider = withRouter(({ lang, children }: RouteComponentProp
       {children}
     </LocaleContext.Provider>
   )
-});
+}

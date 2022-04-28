@@ -1,9 +1,8 @@
-import { lazy, useContext, Suspense } from 'react';
+import { lazy, useContext, Suspense, useState, useEffect } from 'react';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import { LocaleContext, LocaleProvider } from './context/LocaleContext';
-import { WalletProvider, getChainOptions } from '@terra-money/wallet-provider';
+import { WalletProvider, getChainOptions, WalletControllerChainOptions } from '@terra-money/wallet-provider';
 import Layout from './pages/Layout';
 import Loader from './components/Loader';
 import store from './states';
@@ -31,25 +30,28 @@ const Services = () => (
   </>
 );
 
-function App() {
+export default function App() {
   const { locale } = useContext(LocaleContext);
+  const [chainOptions, setChainOptions] = useState<WalletControllerChainOptions | undefined>(undefined);
 
-  const Main = () => (
-    <Provider store={store}>
-      <Router>
+  useEffect(() => {
+    getChainOptions().then((options) => setChainOptions(options));
+  }, []);
+
+  function Main() {
+    return (
+      <Provider store={store}>
         <Suspense fallback={<LoadingScreen locale={locale} />}>
-          <Switch>
-            <Route path='/'>
-              <CheckoutPage />
-            </Route>
-          </Switch>
+          <CheckoutPage />
         </Suspense>
-      </Router>
-      <Services />
-    </Provider>
-  );
+        <Services />
+      </Provider>
+    );
+  }
 
-  return <Main />;
+  return chainOptions ? (
+    <WalletProvider {...chainOptions} children={<Main />} />
+  ) : null;
 }
 
 // TODO: -- Get Sentry DSN
@@ -67,6 +69,4 @@ function App() {
 // });
 
 const rootElement = document.getElementById('root');
-getChainOptions().then((chainOptions) => {
-  render(<WalletProvider {...chainOptions} children={<App />} />, rootElement);
-});
+render(<App />, rootElement);
