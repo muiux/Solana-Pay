@@ -70,5 +70,5 @@ export default function App() {
 //   tracesSampleRate: 1.0,
 // });
 
-const rootElement = document.getElementById('root');
+const rootElement = document.getElementById('kado-stable-pay-widget');
 render(<App />, rootElement);
