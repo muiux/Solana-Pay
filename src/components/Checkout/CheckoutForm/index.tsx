@@ -326,6 +326,7 @@ const CheckoutForm = ({
 
   const handleCheckoutError = (msg?: string) => {
     // TODO
+    console.log('handleCheckoutError', msg)
   }
 
   const handleSolanaCheckout = async() => {

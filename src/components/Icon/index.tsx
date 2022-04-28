@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 import { KadoIconContainer } from './styles';
 import USDCIconPNG from '../../utils/assets/usdc_icon.png';
 

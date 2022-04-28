@@ -168,7 +168,6 @@ const ConnectButton: React.FC<Props> = (props: Props) => {
         <ConnectButtonMenu
           // @ts-ignore
           address={address}
-          balances={balances}
           onDisconnect={() => onDisconnect()}
         />
       )}
@@ -176,7 +175,7 @@ const ConnectButton: React.FC<Props> = (props: Props) => {
   )
 }
 
-function ConnectButtonMenu({ address, balances, onDisconnect }) {
+function ConnectButtonMenu({ address, onDisconnect }) {
   return (
     <TerraConnectMenu className='connected'>
       <TerraConnectMenuListViewOnExplorerBtn
@@ -185,7 +184,7 @@ function ConnectButtonMenu({ address, balances, onDisconnect }) {
       >
         View Wallet
       </TerraConnectMenuListViewOnExplorerBtn>
-      <TerraConnectMenuListDisconnectBtn onClick={(e) => onDisconnect()}>
+      <TerraConnectMenuListDisconnectBtn onClick={() => onDisconnect()}>
         Disconnect Wallet
       </TerraConnectMenuListDisconnectBtn>
     </TerraConnectMenu>

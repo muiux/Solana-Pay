@@ -2,7 +2,11 @@ import { lazy, useContext, Suspense, useState, useEffect } from 'react';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
 import { LocaleContext, LocaleProvider } from './context/LocaleContext';
-import { WalletProvider, getChainOptions, WalletControllerChainOptions } from '@terra-money/wallet-provider';
+import {
+  WalletProvider,
+  getChainOptions,
+  WalletControllerChainOptions,
+} from '@terra-money/wallet-provider';
 import Layout from './pages/Layout';
 import Loader from './components/Loader';
 import store from './states';
@@ -16,14 +20,6 @@ import UserService from './states/user/updater';
 // Lazy Loaded Pages
 const CheckoutPage = lazy(() => import('./pages/Checkout'));
 
-const LoadingScreen = ({ locale }) => (
-  <LocaleProvider lang={locale}>
-    <Layout>
-      <Loader />
-    </Layout>
-  </LocaleProvider>
-);
-
 const Services = () => (
   <>
     <UserService />
@@ -32,7 +28,9 @@ const Services = () => (
 
 export default function App() {
   const { locale } = useContext(LocaleContext);
-  const [chainOptions, setChainOptions] = useState<WalletControllerChainOptions | undefined>(undefined);
+  const [chainOptions, setChainOptions] = useState<
+    WalletControllerChainOptions | undefined
+  >(undefined);
 
   useEffect(() => {
     getChainOptions().then((options) => setChainOptions(options));
@@ -41,8 +39,12 @@ export default function App() {
   function Main() {
     return (
       <Provider store={store}>
-        <Suspense fallback={<LoadingScreen locale={locale} />}>
-          <CheckoutPage />
+        <Suspense fallback={<Loader />}>
+          <LocaleProvider lang={locale}>
+            <Layout>
+              <CheckoutPage />
+            </Layout>
+          </LocaleProvider>
         </Suspense>
         <Services />
       </Provider>

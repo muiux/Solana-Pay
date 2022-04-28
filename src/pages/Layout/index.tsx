@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { BlackBackgroundFullscreen } from './styles';
 
 const resetCss = `

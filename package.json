@@ -1,10 +1,16 @@
 {
-  "name": "kado-stable-pay-button",
+  "name": "kado-pay-widget1",
   "author": "emery@kado.money",
   "version": "1.0.0",
   "description": "Stable Pay by Kado",
   "keywords": [],
-  "main": "src/index.tsx",
+  "main": "./lib/cjs/index.js",
+  "module": "./lib/esm/index.js",
+  "types": "./lib/esm/index.d.ts",
+  "peerDependencies": {
+    "react": "^17.0.2",
+    "react-dom": "17.0.2"
+  },
   "dependencies": {
     "@reduxjs/toolkit": "^1.8.1",
     "@sentry/integrations": "^6.16.1",
@@ -19,8 +25,6 @@
     "isomorphic-fetch": "^3.0.0",
     "jwt-decode": "^3.1.2",
     "polished": "^4.1.1",
-    "react": "^17.0.2",
-    "react-dom": "17.0.2",
     "react-google-autocomplete": "^2.4.0",
     "react-modal": "^3.13.1",
     "react-phone-number-input": "^3.1.44",
@@ -36,14 +40,13 @@
     "@types/node": "^10.12.18",
     "@types/react": "^17.0.0",
     "@types/react-dom": "17.0.0",
-    "typescript": "^4.2.3"
+    "typescript": "^4.6.3"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "start:dev": "PORT=3001 react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "build": "npm run build:esm && npm run build:cjs",
+    "build:esm": "tsc && cp -r src/utils/assets lib/esm/utils/assets",
+    "build:cjs": "tsc --module commonjs --outDir lib/cjs && cp -r src/utils/assets lib/esm/utils/assets",
+    "prepublishOnly": "npm run build"
   },
   "eslintConfig": {
     "extends": [
@@ -55,5 +58,8 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
+  ],
+  "files": [
+    "/lib"
   ]
 }

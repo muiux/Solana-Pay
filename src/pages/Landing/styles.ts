@@ -1,6 +1,4 @@
 import styled, { keyframes } from 'styled-components';
-import { fontFamily, primaryColor, primaryBlack } from '../../components/Global/variables';
-import { lighten } from 'polished';
 
 export const Landing_Container = styled.section`
   width: 100%;

@@ -1,5 +1,3 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
 import Icon from '../../Icon';
 
 import {
@@ -32,10 +30,10 @@ const NotificationBanner = ({ success, error, title, subtitle, onClose, linkText
           <p>{subtitle}</p>
         }
         {linkText && linkText !== '' && linkUrl && linkUrl !== '' &&
-          <Link to={linkUrl}>
+          <a href={linkUrl}>
             {linkText}
             <Icon name='CaretRightIcon' />
-          </Link>
+          </a>
         }
         <button type='button' onClick={onClose}>
           <Icon name='ModalClose' />
