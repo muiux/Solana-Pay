@@ -34,8 +34,9 @@ const config = {
   },
   solana: {
     url: process.env.REACT_APP_SOLANA_CLIENT_URL || 'https://api.solscan.io',
-    usdcAddress: process.env.REACT_APP_SOLANA_USDC_ADDRESS || 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
-    network: process.env.REACT_APP_SOLANA_NETWORK || 'testnet' // Set to 'mainnet-beta' for production
+    usdcAddress: process.env.REACT_APP_SOLANA_USDC_ADDRESS || 'CpMah17kQEL2wqyMKt3mZBdTnZbkbfx4nqmQMFDP5vwp', // Testnet USDC
+    // usdcAddress: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v', // Mainnet USDC
+    network: process.env.REACT_APP_SOLANA_NETWORK || 'testnet' // Set to 'mainnet-beta' for production, 'testnet' for test env
   },
   conversion: {
     currencyApiKey: process.env.REACT_APP_CURR_CONV_API_KEY || '58ef5a696dc945898e25ae47040212b5'
