@@ -1,5 +1,5 @@
 {
-  "name": "kado-pay-widget2",
+  "name": "kado-pay-widget",
   "author": "emery@kado.money",
   "version": "1.0.0",
   "description": "Stable Pay by Kado",
@@ -9,7 +9,7 @@
   "types": "./lib/esm/index.d.ts",
   "peerDependencies": {
     "react": "^17.0.2",
-    "react-dom": "17.0.2"
+    "react-dom": "^17.0.2"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^1.8.1",
@@ -44,9 +44,10 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "npm run build:esm && npm run build:cjs",
-    "build:esm": "tsc && cp -r src/utils/assets lib/esm/utils/assets",
-    "build:cjs": "tsc --module commonjs --outDir lib/cjs && cp -r src/utils/assets lib/esm/utils/assets",
+    "build": "npm run build:esm && npm run build:cjs && npm run copy-assets",
+    "build:esm": "tsc",
+    "build:cjs": "tsc --module commonjs --outDir lib/cjs",
+    "copy-assets": "cp -r src/utils/assets lib/esm/utils/assets & cp -r src/utils/assets lib/cjs/utils/assets",
     "prepublishOnly": "npm run build"
   },
   "eslintConfig": {
