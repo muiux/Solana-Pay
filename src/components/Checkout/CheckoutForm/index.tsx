@@ -238,12 +238,9 @@ const CheckoutForm = ({
     if (type === 'solflare' && solflareWalletConnected) return true;
 
     const connection = getSolanaConnection();
-    console.log('connection: ', connection);
     const provider = getProvider(type);
-    console.log('provider: ', provider);
 
     provider.on('connect', async (publicKey: PublicKey) => {
-      console.log('publicKey: ', publicKey);
       if (type === 'phantom') {
         setPhantomWalletConnected(true);
         setSolanaPublicKey(publicKey);
@@ -255,7 +252,6 @@ const CheckoutForm = ({
       }
 
       try {
-        console.log('publicKey: ', publicKey);
         const tokenAccounts = await connection.getParsedTokenAccountsByOwner(publicKey, {
           mint: new PublicKey(config.solana.usdcAddress)
         }, 'single'); 
@@ -263,7 +259,6 @@ const CheckoutForm = ({
           for (let i = 0; i < tokenAccounts.value.length; i += 1) {
             const account = tokenAccounts.value[i].account;
             const parsedInfo = account.data.parsed.info;
-            console.log('parsedInfo: ', parsedInfo);
             if ((parsedInfo.mint === config.solana.usdcAddress) && parsedInfo.tokenAmount?.uiAmount) {
               setSolanaUsdcBalance(parsedInfo.tokenAmount.uiAmount)
             }
@@ -339,7 +334,6 @@ const CheckoutForm = ({
     }
 
     const connection = getSolanaConnection();
-    console.log('selectedWallet: ', selectedWallet);
     const provider = getProvider(selectedWallet.toLowerCase());
     const mintPublicKey = new PublicKey(config.solana.usdcAddress);    
     const mintToken = new Token(
@@ -348,8 +342,6 @@ const CheckoutForm = ({
       TOKEN_PROGRAM_ID,
       provider
     );
-
-    console.log('provider: ', provider);
           
     const fromTokenAccount = await mintToken.getOrCreateAssociatedAccountInfo(
       solanaPublicKey
@@ -426,8 +418,8 @@ const CheckoutForm = ({
         } else {
           handleCheckoutError();
         }
-      } catch (err) {
-        console.log('err: ', err);
+      } catch (error) {
+        console.log('error: ', error);
         handleCheckoutError();
       }
     }
@@ -525,12 +517,10 @@ const CheckoutForm = ({
             }
           }
         }).catch(error => {
-          console.log(error);
-          console.error('error', error);
+          console.log('error: ', error);
           handleCheckoutError();
           const err = (typeof error === 'object') ? JSON.stringify(error) : error;
           let errParse = JSON.parse(err);
-          console.log('errParse: ', errParse);
           if (errParse && errParse.name === 'UserDenied') {
             setErrorMessage('User Denied Request');
           } else {
