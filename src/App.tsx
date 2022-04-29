@@ -1,4 +1,4 @@
-import { lazy, useContext, Suspense, useState, useEffect } from 'react';
+import { useContext, Suspense, useState, useEffect } from 'react';
 import { Provider } from 'react-redux';
 import { LocaleContext, LocaleProvider } from './context/LocaleContext';
 import {
@@ -12,17 +12,16 @@ import store from './states';
 
 import UserService from './states/user/updater';
 
-// Lazy Loaded Pages
-const CheckoutPage = lazy(() => import('./pages/Checkout'));
+import CheckoutPage from './pages/Checkout'
 
 interface Props {
   open: boolean;
-  onClose?: (data: any) => void;
+  onClose: () => void;
   onSuccess?: (data: any) => void;
   onError?: (error: any) => void;
 }
 
-const App: React.FC<Props> = ({ open }) => {
+const App: React.FC<Props> = ({ open, onClose }) => {
   const { locale } = useContext(LocaleContext);
   const [chainOptions, setChainOptions] = useState<
     WalletControllerChainOptions | undefined
@@ -45,7 +44,7 @@ const App: React.FC<Props> = ({ open }) => {
       <Provider store={store}>
         <Suspense fallback={<Loader />}>
           <LocaleProvider lang={locale}>
-            <Layout>{open && <CheckoutPage />}</Layout>
+            <Layout>{open && <CheckoutPage handleClose={onClose} />}</Layout>
           </LocaleProvider>
         </Suspense>
         <Services />

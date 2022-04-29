@@ -20,6 +20,6 @@ import App from './App';
 // });
 
 const rootElement = document.getElementById('kado-stable-pay-widget');
-rootElement && render(<App open />, rootElement);
+rootElement && render(<App open={true} onClose={() => {}} />, rootElement);
 
 export default App;
