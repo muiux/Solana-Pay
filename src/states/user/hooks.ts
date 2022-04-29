@@ -144,13 +144,16 @@ export function useWalletOverride() {
 
   async function getTerraBalancesByAddress(address: string) {
     const [balance]: any = await terra.bank.balance(address)
-
     const ustToken = balance.toData().find((x) => x.denom === 'uusd')
+
     if (ustToken) {
-      const { amount } = ustToken
+      let { amount } = ustToken
+      amount = amount > 0
+        ? parseInt(amount) / 1000000 // 1m Coins = $1 UST
+        : 0
       dispatch(updateUserAction({ address, balances: { ust: amount } }))
       return {
-        ust: amount,
+        ust: amount
       }
     }
     return undefined

@@ -75,9 +75,12 @@ const StepTwo = (props: IStepTwoProps) => {
   const isPhantomInstalled = window['solana'] && window['solana'].isPhantom;
   const isSolflareInstalled = window['solflare'] && window['solflare'].isSolflare;
 
+  console.log('ustBalance: ', ustBalance);
+  console.log('solanaUsdcBalance: ', solanaUsdcBalance);
+
   return (
     <CartContainerDetailStep>
-      <h2>Select blockchain wallet</h2>
+      <h2>Select Blockchain Wallet</h2>
       {step !== 2 && (
         <CartContainerDetailStepInner className='active'>
           <CartContainerDetailStepText className='price blockchain'>
@@ -148,25 +151,25 @@ const StepTwo = (props: IStepTwoProps) => {
                       ? !checkTerraBalance()
                         ? <p>Uh oh. It looks like your balance of ${(ustBalance && ustBalance > 0) ? ustBalance?.toFixed(2) : 0} UST is too low to continue. Please add funds and try reloading this page.<br/><br/> <button onClick={disconnectWallet}>Disconnect</button></p>
                         : <WalletSelectedContainer>
-                          <WalletSelectedContainerIcon>
-                            <img src='https://assets.terra.money/icon/station-extension/icon.png' alt='Terra Station' />
-                          </WalletSelectedContainerIcon>
-                          <WalletSelectedContainerDetail>
-                          {terraWalletAddress && terraWalletAddress !== ''
-                            ? <h2>{formatWalletAddress(terraWalletAddress)}</h2>
-                            : null
-                          }
-                          {ustBalance && ustBalance !== 0
-                            ? <h3>Balance <span>${ustBalance?.toFixed(2)} UST</span></h3>
-                            : null
-                          }
-                          </WalletSelectedContainerDetail>
-                          <WalletSelectedContainerButtons>
-                            <button type='reset' onClick={disconnectWallet} title='Disconnect Wallet'>
-                              <Icon name='LinkOutIcon' />
-                            </button>
-                          </WalletSelectedContainerButtons>
-                        </WalletSelectedContainer>
+                            <WalletSelectedContainerIcon>
+                              <img src='https://assets.terra.money/icon/station-extension/icon.png' alt='Terra Station' />
+                            </WalletSelectedContainerIcon>
+                            <WalletSelectedContainerDetail>
+                            {terraWalletAddress && terraWalletAddress !== ''
+                              ? <h2>{formatWalletAddress(terraWalletAddress)}</h2>
+                              : null
+                            }
+                            {ustBalance && ustBalance !== 0
+                              ? <h3>Balance <span>${ustBalance?.toFixed(2)} UST</span></h3>
+                              : null
+                            }
+                            </WalletSelectedContainerDetail>
+                            <WalletSelectedContainerButtons>
+                              <button type='reset' onClick={disconnectWallet} title='Disconnect Wallet'>
+                                <Icon name='LinkOutIcon' />
+                              </button>
+                            </WalletSelectedContainerButtons>
+                          </WalletSelectedContainer>
                       : <p>Loading..</p>
                     }
                 </WalletOptionsContainer>
@@ -197,14 +200,6 @@ const StepTwo = (props: IStepTwoProps) => {
               }
               {blockchain === 'solana' &&
                 <WalletOptionsContainer>
-                  {solanaUsdcBalance && solanaUsdcBalance !== 0
-                    ? <p>${solanaUsdcBalance} USDC</p>
-                    : 'N/A'
-                  }
-                  {solanaWalletAddress && solanaWalletAddress !== ''
-                    ? <p>{solanaWalletAddress}</p>
-                    : null
-                  }
                   {selectedWallet === 'phantom' && !isPhantomInstalled
                     ? <label>Please install Phantom wallet.</label>
                     : null
@@ -215,20 +210,37 @@ const StepTwo = (props: IStepTwoProps) => {
                   }
                   <div>
                     {!checkWallet()
-                      ? (
-                          <div>
-                            <h4>Connect your Solana Wallet</h4>
-                            <div style={{ height: 16, display: 'block' }} />
-                            <ConnectButton
-                              onWalletDisconnect={() => disconnectWallet()}
-                              handleSetSelectedWallet={handleSetSelectedWallet}
-                              walletList={['PHANTOM', 'SOLFLARE']}
-                            />
-                          </div>
-                        )
+                      ? <div>
+                          <h4>Connect your Solana Wallet</h4>
+                          <div style={{ height: 16, display: 'block' }} />
+                          <ConnectButton
+                            onWalletDisconnect={() => disconnectWallet()}
+                            handleSetSelectedWallet={handleSetSelectedWallet}
+                            walletList={['PHANTOM', 'SOLFLARE']}
+                          />
+                        </div>
                       : !checkSolanaBalance()
                         ? <p>Uh oh. It looks like your USDC balance is too low to make this order. Please add funds and try reloading this page.<br/><br/> <button onClick={disconnectWallet}>Disconnect</button></p>
-                        : <p>Note: You may disconnect and reconnect Terra Station to change your source of payment. Please refresh the page if doing so.<br/><br/> <button onClick={disconnectWallet}>Disconnect</button></p>
+                        : <WalletSelectedContainer>
+                            <WalletSelectedContainerIcon>
+                              <img src='https://avatars.githubusercontent.com/u/78782331' alt='Phantom Wallet' />
+                            </WalletSelectedContainerIcon>
+                            <WalletSelectedContainerDetail>
+                            {solanaWalletAddress && solanaWalletAddress !== ''
+                              ? <h2>{formatWalletAddress(solanaWalletAddress)}</h2>
+                              : null
+                            }
+                            {solanaUsdcBalance && solanaUsdcBalance !== 0
+                              ? <h3>Balance <span>${solanaUsdcBalance?.toFixed(2)} USDC</span></h3>
+                              : null
+                            }
+                            </WalletSelectedContainerDetail>
+                            <WalletSelectedContainerButtons>
+                              <button type='reset' onClick={disconnectWallet} title='Disconnect Wallet'>
+                                <Icon name='LinkOutIcon' />
+                              </button>
+                            </WalletSelectedContainerButtons>
+                          </WalletSelectedContainer>
                       }
                   </div>
                 </WalletOptionsContainer>
