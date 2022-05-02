@@ -6,7 +6,6 @@ import {
   getChainOptions,
   WalletControllerChainOptions,
 } from '@terra-money/wallet-provider';
-import Layout from './pages/Layout';
 import Loader from './components/Loader';
 import store from './states';
 
@@ -21,7 +20,7 @@ interface Props {
   onError?: (error: any) => void;
 }
 
-const App: React.FC<Props> = ({ open, onClose }) => {
+const StablePayWidget: React.FC<Props> = ({ open, onClose }) => {
   const { locale } = useContext(LocaleContext);
   const [chainOptions, setChainOptions] = useState<
     WalletControllerChainOptions | undefined
@@ -44,7 +43,7 @@ const App: React.FC<Props> = ({ open, onClose }) => {
       <Provider store={store}>
         <Suspense fallback={<Loader />}>
           <LocaleProvider lang={locale}>
-            <Layout>{open && <CheckoutPage handleClose={onClose} />}</Layout>
+            {open && <CheckoutPage handleClose={onClose} />}
           </LocaleProvider>
         </Suspense>
         <Services />
@@ -57,4 +56,4 @@ const App: React.FC<Props> = ({ open, onClose }) => {
   ) : null;
 };
 
-export default App;
+export default StablePayWidget;

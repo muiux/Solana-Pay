@@ -1,5 +1,6 @@
 import { render } from 'react-dom';
-import App from './App';
+// import StablePayWidget from './StablePayWidget';
+import StablePayButton from './StablePayButton';
 
 // import * as Sentry from '@sentry/react';
 // import { Integrations } from '@sentry/tracing';
@@ -20,6 +21,9 @@ import App from './App';
 // });
 
 const rootElement = document.getElementById('kado-stable-pay-widget');
-rootElement && render(<App open={true} onClose={() => {}} />, rootElement);
+rootElement &&
+  // render(<StablePayWidget open={true} onClose={() => {}} />, rootElement);
+  render(<StablePayButton />, rootElement);
 
-export default App;
+export default StablePayButton;
+export { default as StablePayWidget } from './StablePayWidget';

@@ -1,7 +1,7 @@
 {
-  "name": "kado-pay-widget7",
+  "name": "kado-pay-widget",
   "author": "emery@kado.money",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Stable Pay by Kado",
   "keywords": [],
   "main": "./lib/cjs/index.js",
