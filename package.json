@@ -1,7 +1,7 @@
 {
   "name": "kado-pay-widget",
   "author": "emery@kado.money",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Stable Pay by Kado",
   "keywords": [],
   "main": "./lib/cjs/index.js",
@@ -40,15 +40,17 @@
     "@types/node": "^10.12.18",
     "@types/react": "^17.0.0",
     "@types/react-dom": "17.0.0",
-    "typescript": "^4.6.3"
+    "typescript": "^4.6.3",
+    "webpack-cli": "^4.9.2"
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "npm run build:esm && npm run build:cjs && npm run copy-assets",
-    "build:esm": "tsc",
-    "build:cjs": "tsc --module commonjs --outDir lib/cjs",
+    "build:bundle": "npm run publish:cjs && npm run copy-assets && webpack --config webpack.conf.js",
+    "publish": "npm run publish:esm && npm run publish:cjs && npm run copy-assets",
+    "publish:esm": "tsc",
+    "publish:cjs": "tsc --module commonjs --outDir lib/cjs",
     "copy-assets": "cp -r src/utils/assets lib/esm/utils/assets & cp -r src/utils/assets lib/cjs/utils/assets",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "npm run publish"
   },
   "eslintConfig": {
     "extends": [

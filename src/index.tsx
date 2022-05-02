@@ -1,5 +1,5 @@
 import { render } from 'react-dom';
-// import StablePayWidget from './StablePayWidget';
+import StablePayWidget from './StablePayWidget';
 import StablePayButton from './StablePayButton';
 
 // import * as Sentry from '@sentry/react';
@@ -25,5 +25,5 @@ rootElement &&
   // render(<StablePayWidget open={true} onClose={() => {}} />, rootElement);
   render(<StablePayButton />, rootElement);
 
-export default StablePayButton;
-export { default as StablePayWidget } from './StablePayWidget';
+export { default as StablePayButton } from './StablePayButton';
+export default StablePayWidget;
