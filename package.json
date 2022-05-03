@@ -1,10 +1,16 @@
 {
-  "name": "kado-stable-pay-button",
+  "name": "kado-pay-widget",
   "author": "emery@kado.money",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "Stable Pay by Kado",
   "keywords": [],
-  "main": "src/index.tsx",
+  "main": "./lib/cjs/index.js",
+  "module": "./lib/esm/index.js",
+  "types": "./lib/esm/index.d.ts",
+  "peerDependencies": {
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2"
+  },
   "dependencies": {
     "@reduxjs/toolkit": "^1.8.1",
     "@sentry/integrations": "^6.16.1",
@@ -19,14 +25,11 @@
     "isomorphic-fetch": "^3.0.0",
     "jwt-decode": "^3.1.2",
     "polished": "^4.1.1",
-    "react": "^17.0.2",
-    "react-dom": "17.0.2",
     "react-google-autocomplete": "^2.4.0",
     "react-modal": "^3.13.1",
     "react-phone-number-input": "^3.1.44",
     "react-redux": "^8.0.1",
     "react-reveal": "^1.2.2",
-    "react-router-dom": "^5.2.0",
     "react-scripts": "^4.0.3",
     "react-select": "^4.3.1",
     "react-toastify": "5.4.1",
@@ -37,15 +40,17 @@
     "@types/node": "^10.12.18",
     "@types/react": "^17.0.0",
     "@types/react-dom": "17.0.0",
-    "@types/react-router-dom": "^5.1.7",
-    "typescript": "^4.2.3"
+    "typescript": "^4.6.3",
+    "webpack-cli": "^4.9.2"
   },
   "scripts": {
     "start": "react-scripts start",
-    "start:dev": "PORT=3001 react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "build:bundle": "npm run publish:cjs && npm run copy-assets && webpack --config webpack.conf.js",
+    "publish": "npm run publish:esm && npm run publish:cjs && npm run copy-assets",
+    "publish:esm": "tsc",
+    "publish:cjs": "tsc --module commonjs --outDir lib/cjs",
+    "copy-assets": "cp -r src/utils/assets lib/esm/utils/assets & cp -r src/utils/assets lib/cjs/utils/assets",
+    "prepublishOnly": "npm run publish"
   },
   "eslintConfig": {
     "extends": [
@@ -57,5 +62,8 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
+  ],
+  "files": [
+    "/lib"
   ]
 }

@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { BlackBackgroundFullscreen } from './styles';
 
 const resetCss = `
@@ -47,19 +45,17 @@ const resetCss = `
     border-spacing: 0;
   }
   .layout {
-    position: relative;
+    position: fixed;
     overflow: unset;
     min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
     padding-bottom: 0;
-  }
-  * {
-    box-sizing: border-box;
-  }
-  .ReactModal__Overlay.ReactModal__Overlay--after-open {
-    z-index: 999999;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
   }
 `;
 

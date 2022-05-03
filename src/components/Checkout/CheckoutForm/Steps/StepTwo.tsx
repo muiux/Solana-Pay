@@ -118,7 +118,7 @@ const StepTwo = (props: IStepTwoProps) => {
                     type='radio'
                     name='blockchain'
                     checked={blockchain === 'terra'}
-                    onChange={(e) => handleSetBlockchain('terra')}
+                    onChange={() => handleSetBlockchain('terra')}
                   />
                 </BlockchainRadioContainer>
                 <BlockchainLogoContainer>
@@ -184,7 +184,7 @@ const StepTwo = (props: IStepTwoProps) => {
                     type='radio'
                     name='blockchain'
                     checked={blockchain === 'solana'}
-                    onChange={(e) => handleSetBlockchain('solana')}
+                    onChange={() => handleSetBlockchain('solana')}
                   />
                 </BlockchainRadioContainer>
                 <BlockchainLogoContainer>

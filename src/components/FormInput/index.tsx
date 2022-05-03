@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { FormInputContainer, ErrorText } from './styles';
 
 interface IProps {
@@ -35,7 +35,7 @@ function FormInput(props: IProps) {
             className={error ? 'error' : ''}
             onChange={e => onChange(e.target.value)}
           />
-          <div onClick={e => setReveal(!reveal)} className='reveal'>
+          <div onClick={() => setReveal(!reveal)} className='reveal'>
             {reveal ? HideIcon : RevealIcon}
           </div>
         </FormInputContainer>

@@ -16,7 +16,11 @@ import {
   DisabledBannerItem
 } from './styles';
 
-const CheckoutPage: React.FC = () => {
+interface Props {
+  handleClose: () => void
+}
+
+const CheckoutPage: React.FC<Props> = ({ handleClose }) => {
   const [loading, setLoading]                   = useState<boolean>(false);
   const [, setOrderId]                   = useState<string>('');
   const [cartPriceTotal]                        = useState<number>(2199);
@@ -66,6 +70,7 @@ const CheckoutPage: React.FC = () => {
                 setTaxRate={setTaxRate}
                 setOrderId={setOrderId}
                 createOrder={createOrder}
+                handleClose={handleClose}
                 checkoutDisabled={checkoutDisabled || disabledBannerVisible}
                 exchangeRate={exchangeRate}
               />

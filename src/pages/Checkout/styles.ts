@@ -82,7 +82,6 @@ export const CartLoader = styled.div`
 `;
 
 export const CartContainerWrapper = styled.div`
-  padding-bottom: 60px;
   font-family: ${fontFamily};
 `;
 

@@ -1,56 +1,10 @@
-import { lazy, useContext, Suspense } from 'react';
 import { render } from 'react-dom';
-import { Provider } from 'react-redux';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-import { LocaleContext, LocaleProvider } from './context/LocaleContext';
-import { WalletProvider, getChainOptions } from '@terra-money/wallet-provider';
-import Layout from './pages/Layout';
-import Loader from './components/Loader';
-import store from './states';
-
-import UserService from './states/user/updater';
+import StablePayWidget from './StablePayWidget';
+import StablePayButton from './StablePayButton';
 
 // import * as Sentry from '@sentry/react';
 // import { Integrations } from '@sentry/tracing';
 // import { CaptureConsole } from '@sentry/integrations';
-
-// Lazy Loaded Pages
-const CheckoutPage = lazy(() => import('./pages/Checkout'));
-
-const LoadingScreen = ({ locale }) => (
-  <LocaleProvider lang={locale}>
-    <Layout>
-      <Loader />
-    </Layout>
-  </LocaleProvider>
-);
-
-const Services = () => (
-  <>
-    <UserService />
-  </>
-);
-
-function App() {
-  const { locale } = useContext(LocaleContext);
-
-  const Main = () => (
-    <Provider store={store}>
-      <Router>
-        <Suspense fallback={<LoadingScreen locale={locale} />}>
-          <Switch>
-            <Route path='/'>
-              <CheckoutPage />
-            </Route>
-          </Switch>
-        </Suspense>
-      </Router>
-      <Services />
-    </Provider>
-  );
-
-  return <Main />;
-}
 
 // TODO: -- Get Sentry DSN
 // Sentry.init({
@@ -66,7 +20,10 @@ function App() {
 //   tracesSampleRate: 1.0,
 // });
 
-const rootElement = document.getElementById('root');
-getChainOptions().then((chainOptions) => {
-  render(<WalletProvider {...chainOptions} children={<App />} />, rootElement);
-});
+const rootElement = document.getElementById('kado-stable-pay-widget');
+rootElement &&
+  // render(<StablePayWidget open={true} onClose={() => {}} />, rootElement);
+  render(<StablePayButton />, rootElement);
+
+export { default as StablePayButton } from './StablePayButton';
+export default StablePayWidget;

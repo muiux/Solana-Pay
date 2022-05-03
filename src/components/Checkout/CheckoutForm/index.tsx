@@ -41,6 +41,7 @@ interface IProps {
   setTaxRate: React.Dispatch<React.SetStateAction<number>>;
   setOrderId: React.Dispatch<React.SetStateAction<string>>;
   createOrder: (order: ICreateOrderRequest) =>  Promise<ICreateOrderResponse>;
+  handleClose: () => void;
   exchangeRate: number;
 }
 
@@ -52,6 +53,7 @@ const CheckoutForm = ({
   checkoutDisabled,
   createOrder,
   exchangeRate,
+  handleClose,
 }: IProps) => {
   // Global
   const [checkoutLoading, setCheckoutLoading] = useState<boolean>(false);
@@ -324,6 +326,7 @@ const CheckoutForm = ({
 
   const handleCheckoutError = (msg?: string) => {
     // TODO
+    console.log('handleCheckoutError', msg)
   }
 
   const handleSolanaCheckout = async() => {
@@ -666,7 +669,7 @@ const CheckoutForm = ({
           <p>Complete your purchase with UST or USDC</p>
         </CheckoutHeaderContent>
         <CheckoutHeaderButtons>
-          <button type='button' title='Close'>
+          <button type='button' title='Close' onClick={handleClose}>
             <Icon name='ModalClose' />
           </button>
         </CheckoutHeaderButtons>
