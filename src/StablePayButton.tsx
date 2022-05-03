@@ -13,19 +13,24 @@ import store from './states';
 import UserService from './states/user/updater';
 
 import CheckoutPage from './pages/Checkout';
-
 const PayButton = styled.button``;
 
 interface Props {
   label?: string;
-  price: number;
+  subtotal?: number;
+  tax?: number;
+  shippingCost?: number;
+  price?: number;
   onClose?: () => void;
   onSuccess?: (data: any) => void;
 }
 
 const StablePayButton: React.FC<Props> = ({
   label = 'Stable Pay',
-  price,
+  subtotal = 0,
+  price = 0,
+  tax = 0,
+  shippingCost = 0,
   onClose,
   // onSuccess,
 }) => {
@@ -57,7 +62,7 @@ const StablePayButton: React.FC<Props> = ({
         <Suspense fallback={<Loader />}>
           <LocaleProvider lang={locale}>
             <PayButton onClick={() => setOpenWidget(true)}>{label}</PayButton>
-            {openWidget && <CheckoutPage price={price} handleClose={handleClose} />}
+            {openWidget && <CheckoutPage price={price} subtotal={subtotal} tax={tax} shippingCost={shippingCost} handleClose={handleClose} />}
           </LocaleProvider>
         </Suspense>
         <Services />

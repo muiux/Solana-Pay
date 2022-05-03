@@ -9,17 +9,17 @@ import { centsToDollars } from '../../../../utils/centsToDollars';
 interface IStepTwoProps {
   step?: number;
   completedSteps: number[];
-  cartPriceTotal: number;
+  price: number;
 }
 
-const StepOne = ({ cartPriceTotal }: IStepTwoProps) => {
+const StepOne = ({ price }: IStepTwoProps) => {
 
   return (
     <CartContainerDetailStep>
       <h2>Payment Overview</h2>
       <CartContainerDetailStepInner className='active'>
         <CartContainerDetailStepText className='price'>
-          <p className='price'>${centsToDollars(cartPriceTotal)}</p>
+          <p className='price'>${centsToDollars(price)}</p>
           <Icon name='CheckmarkIcon' />
         </CartContainerDetailStepText>
       </CartContainerDetailStepInner>
