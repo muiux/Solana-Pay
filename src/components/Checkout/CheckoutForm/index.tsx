@@ -427,7 +427,7 @@ const CheckoutForm = ({
   }
 
   const checkTerraMainnetActive = () => {
-    const activeNetwork = config.lcdClient.network || 'mainnet';
+    const activeNetwork = config.lcdClient.network || 'testnet';
     const networkValid = wallet && wallet.network && wallet.network.name === activeNetwork;
     return networkValid;
   };
@@ -444,10 +444,14 @@ const CheckoutForm = ({
 
   const handleTerraCheckout = async() => {
     if (checkTerraMainnetActive()) {
+      console.log('wallet1: ', wallet);
+
       if (wallet && wallet.status !== 'WALLET_CONNECTED') {
         setError(true);
         setErrorMessage('No Terra Wallet connection found.');
       }
+
+      console.log('wallet2: ', wallet);
 
       if (wallet) {
         const ustCoins = dollarsToUstOrUsdc(centsToDollars(cartPriceTotal));
@@ -529,6 +533,7 @@ const CheckoutForm = ({
         });
       }
     } else {
+      console.log('mainnet off: ');
       setError(true);
       setErrorMessage(`Invalid network selected, please change network to ${config.lcdClient.network} and try again.`);
       setLoading(false);
@@ -541,6 +546,8 @@ const CheckoutForm = ({
     setError(false);
     setErrorMessage('');
     setCheckoutLoading(true);
+
+    console.log('blockchain: ', blockchain);
 
     if (blockchain === 'solana') {
       handleSolanaCheckout();
