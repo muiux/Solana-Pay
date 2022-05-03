@@ -22,7 +22,7 @@ import StablePayWidget from './StablePayWidget';
 
 const rootElement = document.getElementById('kado-stable-pay-widget');
 rootElement &&
-  render(<StablePayWidget open={true} subtotal={1999} tax={435} shippingCost={0} price={2345} onClose={() => {}} />, rootElement);
+  render(<StablePayWidget open={true} subtotal={1999} tax={435} shippingCost={0} price={2434} onClose={() => {}} />, rootElement);
   // render(<StablePayButton />, rootElement);
 
 export { default as StablePayButton } from './StablePayButton';
