@@ -75,9 +75,6 @@ const StepTwo = (props: IStepTwoProps) => {
   const isPhantomInstalled = window['solana'] && window['solana'].isPhantom;
   const isSolflareInstalled = window['solflare'] && window['solflare'].isSolflare;
 
-  console.log('ustBalance: ', ustBalance);
-  console.log('solanaUsdcBalance: ', solanaUsdcBalance);
-
   return (
     <CartContainerDetailStep>
       <h2>Select Blockchain Wallet</h2>
