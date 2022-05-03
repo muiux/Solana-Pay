@@ -11,16 +11,17 @@ import store from './states';
 
 import UserService from './states/user/updater';
 
-import CheckoutPage from './pages/Checkout'
+import CheckoutPage from './pages/Checkout';
 
 interface Props {
   open: boolean;
+  price: number;
   onClose: () => void;
   onSuccess?: (data: any) => void;
   onError?: (error: any) => void;
 }
 
-const StablePayWidget: React.FC<Props> = ({ open, onClose }) => {
+const StablePayWidget: React.FC<Props> = ({ open, price, onClose }) => {
   const { locale } = useContext(LocaleContext);
   const [chainOptions, setChainOptions] = useState<
     WalletControllerChainOptions | undefined
@@ -43,7 +44,7 @@ const StablePayWidget: React.FC<Props> = ({ open, onClose }) => {
       <Provider store={store}>
         <Suspense fallback={<Loader />}>
           <LocaleProvider lang={locale}>
-            {open && <CheckoutPage handleClose={onClose} />}
+            {open && <CheckoutPage price={price} handleClose={onClose} />}
           </LocaleProvider>
         </Suspense>
         <Services />

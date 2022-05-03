@@ -18,12 +18,14 @@ const PayButton = styled.button``;
 
 interface Props {
   label?: string;
+  price: number;
   onClose?: () => void;
   onSuccess?: (data: any) => void;
 }
 
 const StablePayButton: React.FC<Props> = ({
   label = 'Stable Pay',
+  price,
   onClose,
   // onSuccess,
 }) => {
@@ -55,7 +57,7 @@ const StablePayButton: React.FC<Props> = ({
         <Suspense fallback={<Loader />}>
           <LocaleProvider lang={locale}>
             <PayButton onClick={() => setOpenWidget(true)}>{label}</PayButton>
-            {openWidget && <CheckoutPage handleClose={handleClose} />}
+            {openWidget && <CheckoutPage price={price} handleClose={handleClose} />}
           </LocaleProvider>
         </Suspense>
         <Services />

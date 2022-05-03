@@ -1,6 +1,6 @@
 import { render } from 'react-dom';
 import StablePayWidget from './StablePayWidget';
-import StablePayButton from './StablePayButton';
+// import StablePayButton from './StablePayButton';
 
 // import * as Sentry from '@sentry/react';
 // import { Integrations } from '@sentry/tracing';
@@ -22,8 +22,8 @@ import StablePayButton from './StablePayButton';
 
 const rootElement = document.getElementById('kado-stable-pay-widget');
 rootElement &&
-  // render(<StablePayWidget open={true} onClose={() => {}} />, rootElement);
-  render(<StablePayButton />, rootElement);
+  render(<StablePayWidget open={true} price={2345} onClose={() => {}} />, rootElement);
+  // render(<StablePayButton />, rootElement);
 
 export { default as StablePayButton } from './StablePayButton';
 export default StablePayWidget;
