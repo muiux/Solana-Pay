@@ -17,19 +17,22 @@ import {
 } from './styles';
 
 interface Props {
+  price: number
+  tax: number
+  shippingCost: number
+  subtotal: number
   handleClose: () => void
 }
 
-const CheckoutPage: React.FC<Props> = ({ handleClose }) => {
+const CheckoutPage: React.FC<Props> = ({ price, tax, shippingCost, subtotal, handleClose }) => {
   const [loading, setLoading]                   = useState<boolean>(false);
-  const [, setOrderId]                   = useState<string>('');
-  const [cartPriceTotal]                        = useState<number>(2199);
+  const [, setOrderId]                          = useState<string>('');
   const [taxTotal, setTaxTotal]                 = useState<number>(0);
-  const [, setTaxRate]                   = useState<number>(0);
-  const [checkoutDisabled] = useState<boolean>(false);
-  const [exchangeRate]         = useState<number>(0);
+  const [, setTaxRate]                          = useState<number>(0);
+  const [checkoutDisabled]                      = useState<boolean>(false);
+  const [exchangeRate]                          = useState<number>(0);
   const disabledBannerVisible                   = false;
-  const { createOrder } = useKadoApi()
+  const { createOrder }                         = useKadoApi()
 
   return (
     <Layout>
@@ -64,7 +67,10 @@ const CheckoutPage: React.FC<Props> = ({ handleClose }) => {
             <CartContainer>
               <CheckoutForm
                 taxTotal={taxTotal}
-                cartPriceTotal={cartPriceTotal}
+                price={price}
+                subtotal={subtotal}
+                tax={tax}
+                shippingCost={shippingCost}
                 setLoading={setLoading}
                 setTaxTotal={setTaxTotal}
                 setTaxRate={setTaxRate}

@@ -33,8 +33,11 @@ declare global {
 
 interface IProps {
   ustBalance?: number;
+  subtotal: number;
+  shippingCost: number;
+  tax: number;
+  price: number
   taxTotal: number;
-  cartPriceTotal: number;
   checkoutDisabled: boolean;
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
   setTaxTotal: React.Dispatch<React.SetStateAction<number>>;
@@ -46,9 +49,12 @@ interface IProps {
 }
 
 const CheckoutForm = ({
+  subtotal,
+  shippingCost,
+  price,
+  tax,
   setLoading,
   setOrderId,
-  cartPriceTotal,
   taxTotal,
   checkoutDisabled,
   createOrder,
@@ -189,7 +195,7 @@ const CheckoutForm = ({
     }
 
     setTimeout(() => {
-      pollForDeposit(blockchain, address, terraWalletAddress, cartPriceTotal, order);
+      pollForDeposit(blockchain, address, terraWalletAddress, price, order);
     }, 1000);
   }
 
@@ -330,7 +336,7 @@ const CheckoutForm = ({
   }
 
   const handleSolanaCheckout = async() => {
-    let convertPrice: number | string = centsToDollars(cartPriceTotal);
+    let convertPrice: number | string = centsToDollars(price);
     convertPrice = convertPrice.replace('.', '');
     if (convertPrice) {
       convertPrice = parseInt(convertPrice) * 10000;
@@ -457,7 +463,7 @@ const CheckoutForm = ({
       console.log('wallet2: ', wallet);
 
       if (wallet) {
-        const ustCoins = dollarsToUstOrUsdc(centsToDollars(cartPriceTotal));
+        const ustCoins = dollarsToUstOrUsdc(centsToDollars(price));
         const account = await terra.auth.accountInfo(terraWalletAddress);
         const stdTxMsgSend = new MsgSend(
           terraWalletAddress,
@@ -684,7 +690,7 @@ const CheckoutForm = ({
 
       {/* Price */}
       <StepOne 
-        cartPriceTotal={cartPriceTotal}
+        price={price}
         step={step}
         completedSteps={completedSteps}
       />
@@ -724,7 +730,10 @@ const CheckoutForm = ({
         blockchain={blockchain}
         paymentMethod={paymentMethod}
         checkoutLoading={checkoutLoading}
-        cartPriceTotal={cartPriceTotal}
+        price={price}
+        subtotal={subtotal}
+        shippingCost={shippingCost}
+        tax={tax}
         transactionAddress={transactionAddress}
         handleCheckout={handleCheckout} 
         checkoutDisabled={checkoutDisabled}

@@ -16,7 +16,10 @@ interface IStepThreeProps {
   blockchain: string;
   paymentMethod: string;
   checkoutLoading: boolean;
-  cartPriceTotal: number;
+  subtotal: number;
+  tax: number;
+  shippingCost: number;
+  price: number;
   transactionAddress: string;
   checkoutDisabled: boolean;
   handleCheckout: (e: any) => void;
@@ -28,7 +31,10 @@ const StepThree = (props: IStepThreeProps) => {
     blockchain,
     paymentMethod,
     checkoutLoading,
-    cartPriceTotal,
+    subtotal,
+    tax,
+    shippingCost,
+    price,
     transactionAddress,
     checkoutDisabled,
     handleCheckout
@@ -48,7 +54,7 @@ const StepThree = (props: IStepThreeProps) => {
               <br />
               {blockchain === 'terra' ? (
                 <DepositCheckoutContainer>
-                  <p>Send ${centsToDollars(cartPriceTotal)} UST</p>
+                  <p>Send ${centsToDollars(price)} UST</p>
                   <br />
                   <p>⚠️ Note: Please include both a wallet address and memo address.</p>
                   <p>Address: {config.lcdClient.ustAddress}</p>
@@ -56,7 +62,7 @@ const StepThree = (props: IStepThreeProps) => {
                 </DepositCheckoutContainer>
               ) : (
                 <DepositCheckoutContainer>
-                  <p>Send ${centsToDollars(cartPriceTotal)} USDC</p>
+                  <p>Send ${centsToDollars(price)} USDC</p>
                   <br />
                   <p>{transactionAddress}</p>
                 </DepositCheckoutContainer>
@@ -75,19 +81,19 @@ const StepThree = (props: IStepThreeProps) => {
               </label> */}
               <CartContainerSummaryLineItem>
                 <h4>Subtotal</h4>
-                <h5>$19.99</h5>
+                <h5>${centsToDollars(subtotal)}</h5>
               </CartContainerSummaryLineItem>
               <CartContainerSummaryLineItem>
                 <h4>Shipping</h4>
-                <h5>$0.00</h5>
+                <h5>${centsToDollars(shippingCost)}</h5>
               </CartContainerSummaryLineItem>
               <CartContainerSummaryLineItem>
                 <h4>Tax</h4>
-                <h5>$1.75</h5>
+                <h5>${centsToDollars(tax)}</h5>
               </CartContainerSummaryLineItem>
               <CartContainerSummaryLineItem className='lg'>
                 <h4>Total</h4>
-                <h5>$21.74</h5>
+                <h5>${centsToDollars(price)}</h5>
               </CartContainerSummaryLineItem>
               <CartContainerDetailStepButtonContainer>
                 {checkoutLoading ? (
@@ -102,8 +108,7 @@ const StepThree = (props: IStepThreeProps) => {
                     className={`full ${checkoutDisabled && 'disabled'}`}
                     onClick={(e) => handleCheckout(e)}
                   >
-                    Checkout (${centsToDollars(cartPriceTotal)}
-                    &nbsp;${blockchain === 'terra' ? `UST` : `USDC`})
+                    Checkout
                   </BlueButton>
                 )}
               </CartContainerDetailStepButtonContainer>
