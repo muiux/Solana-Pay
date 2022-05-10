@@ -16,6 +16,7 @@ import CheckoutPage from './pages/Checkout';
 const PayButton = styled.button``;
 
 interface Props {
+  widgetId: number;
   label?: string;
   subtotal?: number;
   tax?: number;
@@ -26,6 +27,7 @@ interface Props {
 }
 
 const StablePayButton: React.FC<Props> = ({
+  widgetId,
   label = 'Stable Pay',
   subtotal = 0,
   price = 0,
@@ -34,6 +36,7 @@ const StablePayButton: React.FC<Props> = ({
   onClose,
   // onSuccess,
 }) => {
+  console.info('widgetId: ', widgetId)
   const { locale } = useContext(LocaleContext);
   const [chainOptions, setChainOptions] = useState<
     WalletControllerChainOptions | undefined
