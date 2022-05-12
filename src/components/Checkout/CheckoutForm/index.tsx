@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { MsgSend } from '@terra-money/terra.js';
 import Icon from '../../Icon';
 import { centsToDollars } from '../../../utils/centsToDollars';
@@ -32,7 +32,6 @@ declare global {
 }
 
 interface IProps {
-  widgetId: number;
   ustBalance?: number;
   subtotal: number;
   shippingCost: number;
@@ -40,6 +39,7 @@ interface IProps {
   price: number
   taxTotal: number;
   checkoutDisabled: boolean;
+  widgetConfig: any;
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
   setTaxTotal: React.Dispatch<React.SetStateAction<number>>;
   setTaxRate: React.Dispatch<React.SetStateAction<number>>;
@@ -50,7 +50,7 @@ interface IProps {
 }
 
 const CheckoutForm = ({
-  widgetId,
+  widgetConfig,
   subtotal,
   shippingCost,
   price,
@@ -76,7 +76,6 @@ const CheckoutForm = ({
   // Payment method
   const [paymentMethod, setPaymentMethod]   = useState<PaymentOptions>('wallet');
   const [selectedWallet, setSelectedWallet] = useState<string>('');
-  const [widgetConfig, setWidgetConfig]     = useState<any>(null);
 
   // Terra wallet
   const [terraWalletAddress, setTerraWalletAddress] = useState<string>('');
@@ -95,7 +94,7 @@ const CheckoutForm = ({
   const wallet = useWallet();
   const { terra, getTerraBalancesByAddress, resetUser } = useWalletOverride();
 
-  const { createTransaction, getWidgetConfig } = useKadoApi()
+  const { createTransaction } = useKadoApi()
 
   const solanaWalletConfig = useMemo(() => {
     if (widgetConfig) {
@@ -135,20 +134,6 @@ const CheckoutForm = ({
     }
     setTerraWalletLoading(false);
   }
-
-  useEffect(() => {
-    (async () => {
-      if (widgetId) {
-        const response = await getWidgetConfig(widgetId);
-        if (response.success) {
-          const { data } = response;
-          const { widgetConfig } = data;
-          setWidgetConfig(widgetConfig)
-        }
-      }
-    })();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [widgetId])
 
   /* If Terra connected, check balance */
   useEffect(() => {
