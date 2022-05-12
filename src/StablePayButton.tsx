@@ -65,7 +65,7 @@ const StablePayButton: React.FC<Props> = ({
         <Suspense fallback={<Loader />}>
           <LocaleProvider lang={locale}>
             <PayButton onClick={() => setOpenWidget(true)}>{label}</PayButton>
-            {openWidget && <CheckoutPage price={price} subtotal={subtotal} tax={tax} shippingCost={shippingCost} handleClose={handleClose} />}
+            {openWidget && <CheckoutPage widgetId={widgetId} price={price} subtotal={subtotal} tax={tax} shippingCost={shippingCost} handleClose={handleClose} />}
           </LocaleProvider>
         </Suspense>
         <Services />

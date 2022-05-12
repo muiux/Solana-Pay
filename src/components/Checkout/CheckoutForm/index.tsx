@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { MsgSend } from '@terra-money/terra.js';
 import Icon from '../../Icon';
 import { centsToDollars } from '../../../utils/centsToDollars';
@@ -32,6 +32,7 @@ declare global {
 }
 
 interface IProps {
+  widgetId: number;
   ustBalance?: number;
   subtotal: number;
   shippingCost: number;
@@ -49,6 +50,7 @@ interface IProps {
 }
 
 const CheckoutForm = ({
+  widgetId,
   subtotal,
   shippingCost,
   price,
@@ -74,6 +76,7 @@ const CheckoutForm = ({
   // Payment method
   const [paymentMethod, setPaymentMethod]   = useState<PaymentOptions>('wallet');
   const [selectedWallet, setSelectedWallet] = useState<string>('');
+  const [widgetConfig, setWidgetConfig]     = useState<any>(null);
 
   // Terra wallet
   const [terraWalletAddress, setTerraWalletAddress] = useState<string>('');
@@ -92,7 +95,35 @@ const CheckoutForm = ({
   const wallet = useWallet();
   const { terra, getTerraBalancesByAddress, resetUser } = useWalletOverride();
 
-  const { createTransaction } = useKadoApi()
+  const { createTransaction, getWidgetConfig } = useKadoApi()
+
+  const solanaWalletConfig = useMemo(() => {
+    if (widgetConfig) {
+      const solanaWallet = widgetConfig.wallets.find((wallet) => wallet.origin === 'solana')
+      if (solanaWallet) {
+        const { address, network } = solanaWallet
+        return {
+          address,
+          network
+        }
+      }
+    }
+    return undefined;
+  }, [widgetConfig])
+
+  const terraWalletConfig = useMemo(() => {
+    if (widgetConfig) {
+      const terraWallet = widgetConfig.wallets.find((wallet) => wallet.origin === 'terra')
+      if (terraWallet) {
+        const { address, network } = terraWallet
+        return {
+          address,
+          network
+        }
+      }
+    }
+    return undefined;
+  }, [widgetConfig])
 
   const getTerraBalance = async (walletAddress: string) => {
     if (walletAddress === '') return 0;
@@ -104,6 +135,20 @@ const CheckoutForm = ({
     }
     setTerraWalletLoading(false);
   }
+
+  useEffect(() => {
+    (async () => {
+      if (widgetId) {
+        const response = await getWidgetConfig(widgetId);
+        if (response.success) {
+          const { data } = response;
+          const { widgetConfig } = data;
+          setWidgetConfig(widgetConfig)
+        }
+      }
+    })();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [widgetId])
 
   /* If Terra connected, check balance */
   useEffect(() => {
@@ -180,11 +225,13 @@ const CheckoutForm = ({
       if (order.blockchain) {
         order.blockchain['network'] = config.lcdClient.url;
       }
-      address = config.lcdClient.ustAddress;
+      // address = config.lcdClient.ustAddress;
+      address = terraWalletConfig?.address;
     } else if (blockchain === 'solana') {
       order['purchaseMethod'] = 'solana';
       if (order.blockchain) {
-        order.blockchain['network'] = config.solana.network;
+        // order.blockchain['network'] = config.solana.network;
+        order.blockchain['network'] = solanaWalletConfig?.network;
       }
 
       const createTxResponse = await createTransaction('SOL');
@@ -308,7 +355,8 @@ const CheckoutForm = ({
 
   const getSolanaConnection = () => {
     const connection = new Connection(
-      clusterApiUrl(config.solana.network as Cluster),
+      // clusterApiUrl(config.solana.network as Cluster),
+      clusterApiUrl(solanaWalletConfig?.network as Cluster),
       'confirmed',
     );
     return connection;
@@ -357,7 +405,8 @@ const CheckoutForm = ({
     );
     
     // TODO: Needs to pull dynamic from organization
-    const address: string = '7fZt2UNqriqXBnuEUYh4WZP5bDdfP1QbT14nopD1AU1o';
+    // const address: string = '7fZt2UNqriqXBnuEUYh4WZP5bDdfP1QbT14nopD1AU1o';
+    const address: string = solanaWalletConfig?.address;
     const destPublicKey = new PublicKey(address);
 
     // Get the derived address of the destination wallet which will hold the custom token
@@ -407,7 +456,8 @@ const CheckoutForm = ({
           purchaseMethod: 'solana',
           blockchain: {
             origin: blockchain,
-            network: config.solana.network,
+            // network: config.solana.network,
+            network: solanaWalletConfig?.network,
             method: 'wallet'
           },
           exchangeRate: exchangeRate,
@@ -468,7 +518,8 @@ const CheckoutForm = ({
         const stdTxMsgSend = new MsgSend(
           terraWalletAddress,
           // TODO: Update below to pull from Org init
-          config.lcdClient.ustAddress,
+          // config.lcdClient.ustAddress,
+          terraWalletConfig?.address,
           { uusd: ustCoins }
         );
         const feeEstimate = await terra.tx.estimateFee(
@@ -599,7 +650,8 @@ const CheckoutForm = ({
                 if (m.type === 'bank/MsgSend') {
                   const { amount, to_address, from_address } = m.value;
                   // TODO: to_address match must be to end-merchant, not static config
-                  if (from_address === walletAddress && to_address === config.lcdClient.ustAddress) {
+                  // if (from_address === walletAddress && to_address === config.lcdClient.ustAddress) {
+                  if (from_address === walletAddress && to_address === terraWalletConfig?.address) {
                     for (const a of amount) {
                       const amt = a.amount;
                       if (amt === ustCoins && !previousAmountTxHashes.includes(txhash)) {

@@ -17,6 +17,7 @@ import {
 } from './styles';
 
 interface Props {
+  widgetId: number
   price: number
   tax: number
   shippingCost: number
@@ -24,7 +25,7 @@ interface Props {
   handleClose: () => void
 }
 
-const CheckoutPage: React.FC<Props> = ({ price, tax, shippingCost, subtotal, handleClose }) => {
+const CheckoutPage: React.FC<Props> = ({ widgetId, price, tax, shippingCost, subtotal, handleClose }) => {
   const [loading, setLoading]                   = useState<boolean>(false);
   const [, setOrderId]                          = useState<string>('');
   const [taxTotal, setTaxTotal]                 = useState<number>(0);
@@ -66,6 +67,7 @@ const CheckoutPage: React.FC<Props> = ({ price, tax, shippingCost, subtotal, han
           {!loading &&
             <CartContainer>
               <CheckoutForm
+                widgetId={widgetId}
                 taxTotal={taxTotal}
                 price={price}
                 subtotal={subtotal}
