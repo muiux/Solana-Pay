@@ -36,7 +36,6 @@ const StablePayWidget: React.FC<Props> = ({
   price = 0,
   onClose,
 }) => {
-  console.info('widgetId: ', widgetId);
   const { locale } = useContext(LocaleContext);
   const [chainOptions, setChainOptions] = useState<
     WalletControllerChainOptions | undefined
