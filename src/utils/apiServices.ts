@@ -109,6 +109,8 @@ export function useKadoApi() {
   const checkTransactionStatus = async (address: string) => await kadoApiRequest(`/v1/cart/tx-status?address=${address}`, 'GET')
   const createOrder = async (data: ICreateOrderRequest): Promise<ICreateOrderResponse> => await kadoApiRequest(`/v1/order`, 'POST', data)
   const querySalesTax = async (code: string) => await kadoApiRequest(`/v1/cart/sales-tax?zipcode=${code}`, 'GET')
+  // TODO: thinking needAuth should be true
+  const getWidgetConfig = async (widgetId: number) => await kadoApiRequest(`/v2/pay/widget-config/${widgetId}`, 'GET', null, false, null)
 
   return {
     getTransactionByAmount,
@@ -116,6 +118,7 @@ export function useKadoApi() {
     checkTransactionStatus,
     createOrder,
     querySalesTax,
+    getWidgetConfig,
   }
 }
 

@@ -1,7 +1,7 @@
 {
   "name": "kado-pay-widget",
   "author": "emery@kado.money",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Stable Pay by Kado",
   "keywords": [],
   "main": "./lib/cjs/index.js",
@@ -47,10 +47,12 @@
     "start": "react-scripts start",
     "build:bundle": "npm run publish:cjs && npm run copy-assets && webpack --config webpack.conf.js",
     "publish": "npm run publish:esm && npm run publish:cjs && npm run copy-assets",
-    "publish:esm": "tsc",
-    "publish:cjs": "tsc --module commonjs --outDir lib/cjs",
+    "publish:esm": "tsc -p tsconfig.bundle.json",
+    "publish:cjs": "tsc -p tsconfig.bundle.json --module commonjs --outDir lib/cjs",
     "copy-assets": "cp -r src/utils/assets lib/esm/utils/assets & cp -r src/utils/assets lib/cjs/utils/assets",
-    "prepublishOnly": "npm run publish"
+    "prepublishOnly": "npm run publish",
+    "prepare": "npm run co:login",
+    "co:login": "aws codeartifact login --tool npm --repository stable-pay-widget --domain kado"
   },
   "eslintConfig": {
     "extends": [

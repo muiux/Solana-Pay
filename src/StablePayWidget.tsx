@@ -15,6 +15,7 @@ import CheckoutPage from './pages/Checkout';
 
 interface Props {
   open: boolean;
+  widgetId: number;
 
   subtotal?: number;
   tax?: number;
@@ -28,6 +29,7 @@ interface Props {
 
 const StablePayWidget: React.FC<Props> = ({
   open,
+  widgetId,
   subtotal = 0,
   tax = 0,
   shippingCost = 0,
@@ -56,7 +58,7 @@ const StablePayWidget: React.FC<Props> = ({
       <Provider store={store}>
         <Suspense fallback={<Loader />}>
           <LocaleProvider lang={locale}>
-            {open && <CheckoutPage price={price} subtotal={subtotal} tax={tax} shippingCost={shippingCost} handleClose={onClose} />}
+            {open && <CheckoutPage price={price} subtotal={subtotal} tax={tax} shippingCost={shippingCost} widgetId={widgetId} handleClose={onClose} />}
           </LocaleProvider>
         </Suspense>
         <Services />
