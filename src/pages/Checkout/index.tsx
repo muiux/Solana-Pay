@@ -112,7 +112,7 @@ const CheckoutPage: React.FC<Props> = ({ widgetId, price, tax, shippingCost, sub
                   />
                 )}
                 {widgetId && widgetConfig === undefined && (
-                  <Alert handleClose={handleClose} />
+                  <Alert />
                 )}
               </CartContainer>
             </Fade>

@@ -10,8 +10,9 @@ import Loader from './components/Loader';
 import store from './states';
 
 import UserService from './states/user/updater';
+import WalletService from './states/wallet/updater';
 
-import CheckoutPage from './pages/Checkout';
+import CheckoutPage from './pages/Checkout-v2';
 
 interface Props {
   open: boolean;
@@ -49,6 +50,7 @@ const StablePayWidget: React.FC<Props> = ({
     return (
       <>
         <UserService />
+        <WalletService />
       </>
     );
   }

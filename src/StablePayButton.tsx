@@ -11,8 +11,9 @@ import Loader from './components/Loader';
 import store from './states';
 
 import UserService from './states/user/updater';
+import WalletService from './states/wallet/updater';
 
-import CheckoutPage from './pages/Checkout';
+import CheckoutPage from './pages/Checkout-v2';
 const PayButton = styled.button``;
 
 interface Props {
@@ -50,6 +51,7 @@ const StablePayButton: React.FC<Props> = ({
     return (
       <>
         <UserService />
+        <WalletService />
       </>
     );
   }

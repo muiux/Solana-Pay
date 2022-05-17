@@ -1,10 +1,14 @@
 import { configureStore } from '@reduxjs/toolkit';
 
 import user from './user/reducer';
+import wallet from './wallet/reducer';
+import org from './org/reducer';
 
 const store = configureStore({
   reducer: {
     user,
+    wallet,
+    org,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
