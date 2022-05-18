@@ -17,6 +17,7 @@ export function useOrgConfig() {
     if (wallets.length <= 0) {
       return undefined
     }
+    // TODO: Exception handling for multi available wallet options
     const find = wallets.find((wallet) => wallet.origin === origin)
     if (!find) {
       return undefined

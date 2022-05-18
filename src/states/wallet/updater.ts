@@ -11,9 +11,7 @@ const Updater = () => {
 
   const getSolanaConnection = () => {
     const cluster = getClusterByNetworkName('solana')
-    console.log('getSolanaConnection', cluster)
     const connection = new Connection(
-      // clusterApiUrl(config.solana.network as Cluster),
       clusterApiUrl(cluster),
       'confirmed',
     );

@@ -4,22 +4,7 @@ import {
   fontFamily,
   primaryColor,
   primaryWhite,
-  primaryBlack
 } from '../../components/Global/variables';
-
-// const fadeContentDown = keyframes`
-//   0% {
-//     max-height: 0;
-//     height: 0;
-//     opacity: 0;
-//   }
-
-//   100% {
-//     max-height: 1600px;
-//     height: 100%;
-//     opacity: 1;
-//   }
-// `;
 
 export const CartLoader = styled.div`
   background: transparent;
@@ -130,61 +115,6 @@ export const CartContainer = styled.div`
     min-width: 100%;
   `}
 `;
-
-export const OrderConfirmationModalContent = styled.div`
-  width: 100%;
-  margin: 0 auto 16px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-  min-height: 100px;
-`;
-
-export const CartContainerBanner = styled.div`
-  display: flex;
-  background: #f3f6fa;
-  padding: 32px 30px 0 32px;
-  position: relative;
-  justify-content: center;
-  align-items: center;
-
-  ${breakpointDown.xs`
-    width: calc(100% + 48px);
-    position: relative;
-    left: -24px;
-  `}
-`;
-
-export const CheckoutDisabledBanner = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 16px 16px;
-  background: ${primaryBlack};
-  color: ${primaryWhite};
-  box-shadow: 1px 2px 5px rgb(0 0 0 / 16%);
-  border-radius: 4px;
-  font-size: 14px;
-  position: relative;
-
-  .icon {
-    margin-right: 16px;
-    circle {
-      fill: ${primaryWhite} !important;
-      opacity: 1;
-    }
-  }
-`;
-
-export const DisabledBannerItem = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-`;
-
 
 export const CloseButton = styled.button`
   height: 36px;
