@@ -1,3 +1,4 @@
+import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { AppState } from '..'
@@ -30,7 +31,7 @@ export function useWalletOverride() {
     await provider.connect();
   }
 
-  function getBalanceByToken(denom: string) {
+  const getBalanceByToken = useCallback((denom: string) => {
     try {
       if (!balances[denom.toLowerCase()]) {
         // eslint-disable-next-line no-throw-literal
@@ -41,7 +42,7 @@ export function useWalletOverride() {
       console.error('getBalanceByToken', e)
       return 0
     }
-  }
+  }, [balances])
 
   return {
     address,

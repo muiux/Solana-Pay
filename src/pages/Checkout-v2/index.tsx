@@ -43,7 +43,7 @@ const CheckoutPage: React.FC<Props> = ({ widgetId, price, tax, shippingCost, sub
   const [widgetConfigError, setWidgetConfigError] = useState<any>(false);
   const { getWidgetConfig }                     = useKadoApi()
   const [blockchain, setBlockchain]             = useState<string | undefined>(undefined)
-  const { address, walletType, provider, updateWalletType } = useWalletOverride()
+  const { address, walletType, provider, balances, updateWalletType, getBalanceByToken } = useWalletOverride()
   const { updateConfig, getClusterByNetworkName, getToAddressByNetworkName } = useOrgConfig()
 
   const Blockchains: BlockchainType = useMemo(() =>({
@@ -58,30 +58,16 @@ const CheckoutPage: React.FC<Props> = ({ widgetId, price, tax, shippingCost, sub
         phantom: {
           type: "phantom",
           name: "Phantom",
-          logo: require("../../assets/img/phantom.png").default,
+          logo: require("../../assets/img/phantom.svg").default,
           isInstalled: !!window['solana'] && !!window['solana'].isPhantom,
           provider: window['solana'],
         },
-        alice: {
-          type: "alice",
-          name: "Alice",
-          logo: require("../../assets/img/alice.png").default,
-          isInstalled: false,
-          provider: undefined,
-        },
-        leap: {
-          type: "leap",
-          name: "Leap Wallet",
-          logo: require("../../assets/img/leap.png").default,
-          isInstalled: false,
-          provider: undefined,
-        },
-        xdefi: {
-          type: "xdefi",
-          name: "xDEFI Wallet",
-          logo: require("../../assets/img/xdefi.png").default,
-          isInstalled: false,
-          provider: undefined,
+        solflare: {
+          type: "solflare",
+          name: "Solflare",
+          logo: require("../../assets/img/solflare.svg").default,
+          isInstalled: !!window['solflare'] && !!window['solflare'].isSolflare,
+          provider: window['solflare'],
         },
       }
     }
@@ -98,6 +84,28 @@ const CheckoutPage: React.FC<Props> = ({ widgetId, price, tax, shippingCost, sub
 
     return Blockchains[blockchain.toLowerCase()].payWith
   }, [Blockchains, blockchain])
+
+  const payWithBalance = useMemo(() => {
+    if (payWith) {
+      return getBalanceByToken(payWith.denom)
+    } else {
+      return 0
+    }
+  }, [payWith, getBalanceByToken])
+
+  const solBalance = useMemo(() => {
+    try {
+      return getBalanceByToken("sol")
+    } catch(e) {
+      console.error('Sol balance:', e)
+      return 0;
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [balances])
+
+  const canProcess = useMemo(() => {
+    return payWithBalance > 0 && solBalance > 0
+  }, [payWithBalance, solBalance])
 
   const wallets: { [key: string]: WalletSelectType } = useMemo(() => {
     if (!blockchain) {
@@ -261,7 +269,7 @@ const CheckoutPage: React.FC<Props> = ({ widgetId, price, tax, shippingCost, sub
     return (
       <CheckoutHeaderContent>
         <h2>Stable Pay</h2>
-        <p>Complete purchase with UST.</p>
+        <p>Complete purchase with USDC.</p>
       </CheckoutHeaderContent>
     )
   }
@@ -297,7 +305,7 @@ const CheckoutPage: React.FC<Props> = ({ widgetId, price, tax, shippingCost, sub
             </>
           )
         }
-        {address && <CheckoutButton onClick={handleCheckout}>Proceed payment</CheckoutButton>}
+        {address && <CheckoutButton onClick={handleCheckout} disabled={!canProcess}>Proceed payment</CheckoutButton>}
       </>
     )
   }

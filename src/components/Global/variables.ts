@@ -6,7 +6,7 @@ const primarySuccess: string = '#4AC77C';
 const primaryBlack:   string = '#212121';
 const primaryWhite:   string = '#FFFFFF';
 
-const fontFamily: string = 'sofia-pro, Open Sans, Helvetica';
+const fontFamily: string = 'Circular Std, Open Sans, Helvetica';
 
 export { primaryColor,primaryError, primarySuccess, primaryBlack, primaryWhite, fontFamily };
 

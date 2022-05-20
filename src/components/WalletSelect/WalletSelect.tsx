@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
+import cx from "classnames";
 import { WalletSelectType } from '../../pages/Checkout-v2/types';
 import {
   WalletSelectWrapper,
@@ -34,7 +35,29 @@ const WalletSelect: React.FC<Props> = ({
   payWith,
 }): JSX.Element => {
   const [connecting, setConnecting] = useState(false);
-  const { address, connectProvider, updateWalletType, getBalanceByToken } = useWalletOverride();
+  const { address, balances, connectProvider, updateWalletType, getBalanceByToken } = useWalletOverride();
+
+  const payWithBalance = useMemo(() => {
+    if (payWith) {
+      return getBalanceByToken(payWith.denom)
+    } else {
+      return 0
+    }
+  }, [payWith, getBalanceByToken])
+
+  const solBalance = useMemo(() => {
+    try {
+      return getBalanceByToken("sol")
+    } catch(e) {
+      console.error('Sol balance:', e)
+      return 0;
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [balances])
+
+  const canProcess = useMemo(() => {
+    return payWithBalance > 0 && solBalance > 0
+  }, [payWithBalance, solBalance])
   
   async function handleConnect() {
     updateWalletType(type as WalletType);
@@ -90,7 +113,9 @@ const WalletSelect: React.FC<Props> = ({
             <BalanceInfo>
               <span className='balance'>Balance</span>
               <img className='icon' src={payWith.logo} alt="" />
-              <span className='amount'>{formatCurrency(getBalanceByToken(payWith.denom))} {payWith.denom.toUpperCase()}</span>
+              <span className={cx('amount', { error: !canProcess })}>
+                {formatCurrency(payWithBalance)} {payWith.denom.toUpperCase()}
+              </span>
             </BalanceInfo>
           )}
         </WalletBody>

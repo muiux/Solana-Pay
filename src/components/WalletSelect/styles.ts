@@ -1,4 +1,5 @@
-import styled from "styled-components"
+import styled from 'styled-components'
+import { fontFamily, primaryError } from '../Global/variables'
 
 export const WalletSelectWrapper = styled.div`
   padding: 15px;
@@ -31,17 +32,18 @@ export const WalletName = styled.span`
 `
 
 export const SubmitButton = styled.button<{isActive: boolean}>`
-  background: ${({ isActive }) => !isActive ? "rgba(48, 102, 219, 0.1)" : "#3066DB"};
+  background: ${({ isActive }) => !isActive ? 'rgba(48, 102, 219, 0.1)' : '#3066DB'};
   border-radius: 6px;
-  padding: 7px 10px;
+  padding: 7px;
   width: 70px;
   height: 32px;
 
+  font-family: ${fontFamily};
   font-style: normal;
   font-weight: 400;
   font-size: 14px;
   line-height: 18px;
-  color: ${({ isActive }) => !isActive ? "#3066DB" : "#FFFFFF"};
+  color: ${({ isActive }) => !isActive ? '#3066DB' : '#FFFFFF'};
   border: unset;
   cursor: pointer;
 `
@@ -85,5 +87,9 @@ export const BalanceInfo = styled.div`
     font-weight: 400;
     font-size: 12px;
     line-height: 18px;
+
+    &.error {
+      color: ${primaryError};
+    }
   }
 `

@@ -175,16 +175,17 @@ export const WalletsContainer = styled.div`
   }
 `
 
-export const CheckoutButton = styled.button`
-  background: #3066DB;
+export const CheckoutButton = styled.button<{ disabled: boolean }>`
+  background: ${({ disabled }) => disabled ? 'rgba(48, 102, 219, 0.1)' : '#3066DB'};
   border-radius: 10px;
-  color: #FFFFFF;
+  color: ${({ disabled }) => disabled ? '#3066DB' : '#FFFFFF'};
+  font-family: ${fontFamily};
   font-style: normal;
   font-weight: 400;
   font-size: 18px;
   line-height: 22px;
   border: unset;
-  cursor: pointer;
+  cursor: ${({ disabled }) => disabled ? 'not-allowed' : 'pointer'};
 
   width: 100%;
   height: 60px;

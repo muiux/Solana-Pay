@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Connection, PublicKey, clusterApiUrl } from '@solana/web3.js';
+import { Connection, PublicKey, clusterApiUrl, LAMPORTS_PER_SOL } from '@solana/web3.js';
 import { useWalletOverride } from './hooks';
 import { WalletType } from './types';
 import { useOrgConfig } from '../org/hooks';
@@ -46,20 +46,33 @@ const Updater = () => {
     (async() => {
       switch (walletType) {
         case WalletType.Phantom:
+          let tokenAccounts;
           const connection = getSolanaConnection();
           const publicKey = new PublicKey(address);
 
-          const tokenAccounts = await connection.getParsedTokenAccountsByOwner(publicKey, {
-            mint: new PublicKey(config.solana.usdcAddress)
-          }, 'single'); 
-          if (tokenAccounts && tokenAccounts.value && tokenAccounts.value.length > 0) {
-            for (let i = 0; i < tokenAccounts.value.length; i += 1) {
-              const account = tokenAccounts.value[i].account;
-              const parsedInfo = account.data.parsed.info;
-              if ((parsedInfo.mint === config.solana.usdcAddress) && parsedInfo.tokenAmount?.uiAmount) {
-                updateBalance({
-                  usdc: parsedInfo.tokenAmount.uiAmount
-                })
+          try {
+            const balance = await connection.getBalance(publicKey);
+            updateBalance({ sol: balance / LAMPORTS_PER_SOL });
+          } catch(e) {
+            console.error('Failed to get Sol balance', e)
+          }
+
+          try {
+            tokenAccounts = await connection.getParsedTokenAccountsByOwner(publicKey, {
+              mint: new PublicKey(config.solana.usdcAddress)
+            }, 'single'); 
+          } catch(e) {
+            console.error(e);
+          } finally {
+            if (tokenAccounts && tokenAccounts.value && tokenAccounts.value.length > 0) {
+              for (let i = 0; i < tokenAccounts.value.length; i += 1) {
+                const account = tokenAccounts.value[i].account;
+                const parsedInfo = account.data.parsed.info;
+                if ((parsedInfo.mint === config.solana.usdcAddress) && parsedInfo.tokenAmount?.uiAmount) {
+                  updateBalance({
+                    usdc: parsedInfo.tokenAmount.uiAmount
+                  })
+                }
               }
             }
           }

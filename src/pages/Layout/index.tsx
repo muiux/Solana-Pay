@@ -1,4 +1,5 @@
 import { BlackBackgroundFullscreen } from './styles';
+import './index.css';
 
 const resetCss = `
   html, body, div, span, applet, object, iframe,
