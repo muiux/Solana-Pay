@@ -1,1 +1,1 @@
-export { default as CheckoutPrice } from "./CheckoutPrice"
+export { default as CheckoutPrice } from './CheckoutPrice'

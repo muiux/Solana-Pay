@@ -1,1 +1,1 @@
-export { default as BlockchainSelect } from "./BlockchainSelect"
+export { default as BlockchainSelect } from './BlockchainSelect'

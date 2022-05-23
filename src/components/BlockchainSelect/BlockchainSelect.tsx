@@ -13,22 +13,16 @@ interface Props {
 }
 
 const BlockchainSelect: React.FC<Props> = ({ logo, payWith, selected, handleSelect }): JSX.Element => {
-
-  function renderPayWith () {
-    return (
-      <PayWithWrapper>
-        <span>Pay with</span>
-        <img src={payWith.logo} alt="" />
-      </PayWithWrapper>
-    )
-  }
   return (
     <BlockchainSelectWrapper>
-      <Logo src={logo} alt="" />
+      <Logo src={logo} alt='' />
       <BlockchainSelectAction>
-        {renderPayWith()}
+        <PayWithWrapper>
+          <span>Pay with</span>
+          <img src={payWith.logo} alt='' />
+        </PayWithWrapper>
         <SubmitButton onClick={handleSelect} submitted={selected}>
-          {selected ? "Change" : "Select"}
+          {selected ? 'Change' : 'Select'}
         </SubmitButton>
       </BlockchainSelectAction>
     </BlockchainSelectWrapper>

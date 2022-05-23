@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import cx from "classnames";
+import cx from 'classnames';
 import { WalletSelectType } from '../../pages/Checkout-v2/types';
 import {
   WalletSelectWrapper,
@@ -47,7 +47,7 @@ const WalletSelect: React.FC<Props> = ({
 
   const solBalance = useMemo(() => {
     try {
-      return getBalanceByToken("sol")
+      return getBalanceByToken('sol')
     } catch(e) {
       console.error('Sol balance:', e)
       return 0;
@@ -112,7 +112,7 @@ const WalletSelect: React.FC<Props> = ({
           {payWith && (
             <BalanceInfo>
               <span className='balance'>Balance</span>
-              <img className='icon' src={payWith.logo} alt="" />
+              <img className='icon' src={payWith.logo} alt='' />
               <span className={cx('amount', { error: !canProcess })}>
                 {formatCurrency(payWithBalance)} {payWith.denom.toUpperCase()}
               </span>

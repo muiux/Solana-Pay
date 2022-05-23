@@ -48,24 +48,24 @@ const CheckoutPage: React.FC<Props> = ({ widgetId, price, tax, shippingCost, sub
 
   const Blockchains: BlockchainType = useMemo(() =>({
     solana: {
-      name: "Solana",
-      logo: require("../../assets/img/solana.svg").default,
+      name: 'Solana',
+      logo: require('../../assets/img/solana.svg').default,
       payWith: {
-        logo: require("../../assets/img/usdc-coin.svg").default,
-        denom: "usdc",
+        logo: require('../../assets/img/usdc-coin.svg').default,
+        denom: 'usdc',
       },
       wallets: {
         phantom: {
-          type: "phantom",
-          name: "Phantom",
-          logo: require("../../assets/img/phantom.svg").default,
+          type: 'phantom',
+          name: 'Phantom',
+          logo: require('../../assets/img/phantom.svg').default,
           isInstalled: !!window['solana'] && !!window['solana'].isPhantom,
           provider: window['solana'],
         },
         solflare: {
-          type: "solflare",
-          name: "Solflare",
-          logo: require("../../assets/img/solflare.svg").default,
+          type: 'solflare',
+          name: 'Solflare',
+          logo: require('../../assets/img/solflare.svg').default,
           isInstalled: !!window['solflare'] && !!window['solflare'].isSolflare,
           provider: window['solflare'],
         },
@@ -95,7 +95,7 @@ const CheckoutPage: React.FC<Props> = ({ widgetId, price, tax, shippingCost, sub
 
   const solBalance = useMemo(() => {
     try {
-      return getBalanceByToken("sol")
+      return getBalanceByToken('sol')
     } catch(e) {
       console.error('Sol balance:', e)
       return 0;

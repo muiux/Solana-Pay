@@ -1,5 +1,5 @@
-import styled from "styled-components"
-import { fontFamily } from "../Global/variables"
+import styled from 'styled-components'
+import { fontFamily } from '../Global/variables'
 
 export const BlockchainSelectWrapper = styled.div`
   background: #FFFFFF;
@@ -48,7 +48,7 @@ export const PayWithWrapper = styled.div`
 `
 
 export const SubmitButton = styled.button<{submitted: boolean}>`
-  background: ${({ submitted }) => submitted ? "rgba(48, 102, 219, 0.1)" : "#3066DB"};
+  background: ${({ submitted }) => submitted ? 'rgba(48, 102, 219, 0.1)' : '#3066DB'};
   border-radius: 6px;
   padding: 7px;
   width: 70px;
@@ -58,7 +58,7 @@ export const SubmitButton = styled.button<{submitted: boolean}>`
   font-weight: 400;
   font-size: 14px;
   line-height: 18px;
-  color: ${({ submitted }) => submitted ? "#3066DB" : "#FFFFFF"};
+  color: ${({ submitted }) => submitted ? '#3066DB' : '#FFFFFF'};
   border: unset;
   cursor: pointer;
 `

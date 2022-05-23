@@ -1,5 +1,5 @@
-import styled from "styled-components"
-import { fontFamily } from "../Global/variables"
+import styled from 'styled-components'
+import { fontFamily } from '../Global/variables'
 
 export const CheckoutPriceWrapper = styled.div`
   padding: 18px;
